@@ -10,6 +10,7 @@ use App\Models\Pago;
 use App\Models\Socio;
 use App\Models\Vivienda;
 use App\Services\Auditoria\RegistradorAuditoria;
+use App\Services\Morosidad\EstadoCuenta;
 use App\Services\Tenancy\ContextoJass;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -34,6 +35,7 @@ class RegistradorPago
         private readonly GeneradorNumeroRecibo $generadorNumeroRecibo,
         private readonly CalculadoraConsumo $calculadoraConsumo,
         private readonly RegistradorAuditoria $auditoria,
+        private readonly EstadoCuenta $estadoCuenta,
     ) {}
 
     public function mantenimiento(Socio $socio, Vivienda $vivienda, string $periodo, float $monto, string $fechaPago): Pago
@@ -57,6 +59,7 @@ class RegistradorPago
             ]);
 
             $this->auditoria->registrar('cobrar', $pago, ['tipo' => 'mantenimiento', 'monto' => $monto, 'periodo' => $periodo]);
+            $this->recalcularMorosidad($vivienda);
 
             return $pago;
         });
@@ -98,6 +101,7 @@ class RegistradorPago
             ]);
 
             $this->auditoria->registrar('cobrar', $pago, ['tipo' => 'consumo_medidor', 'monto' => $monto, 'periodo' => $periodo]);
+            $this->recalcularMorosidad($vivienda);
 
             return $pago;
         });
@@ -129,9 +133,19 @@ class RegistradorPago
             ]);
 
             $this->auditoria->registrar('cobrar', $pago, ['tipo' => 'consumo_directo', 'monto' => $monto, 'periodo' => $periodo]);
+            $this->recalcularMorosidad($vivienda);
 
             return $pago;
         });
+    }
+
+    /**
+     * Recalcula morosa_desde de la vivienda inline tras el cobro (sección 4
+     * de la Fase 4): no espera al job nocturno `yaku:marcar-morosos`.
+     */
+    private function recalcularMorosidad(Vivienda $vivienda): void
+    {
+        $vivienda->update(['morosa_desde' => $this->estadoCuenta->fechaMorosaDesde($vivienda)]);
     }
 
     private function jassActual(): Jass
