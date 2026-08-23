@@ -7,6 +7,7 @@ use App\Http\Requests\Socios\StoreSocioRequest;
 use App\Http\Requests\Socios\UpdateSocioRequest;
 use App\Models\Socio;
 use App\Services\Auditoria\RegistradorAuditoria;
+use App\Services\Tenancy\ContextoJass;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -43,10 +44,17 @@ class SocioController extends Controller
     {
         $this->authorize('view', $socio);
 
+        $jass = app(ContextoJass::class)->jass();
+
         return Inertia::render('panel/socios/show', [
             'socio' => $socio->only(['id', 'nombres', 'apellidos', 'dni', 'telefono', 'direccion']),
-            'viviendas' => $socio->viviendas()->orderBy('id')->get(['id', 'socio_id', 'direccion', 'activa']),
+            'viviendas' => $socio->viviendas()
+                ->with('medidor:id,vivienda_id,correlativo,codigo,lectura_inicial,activo')
+                ->orderBy('id')
+                ->get(['id', 'socio_id', 'direccion', 'activa']),
             'puedeGestionar' => $request->user()->can('create', Socio::class),
+            'tieneMedidor' => (bool) $jass?->tiene_medidor,
+            'prefijoJass' => $jass?->prefijo,
         ]);
     }
 

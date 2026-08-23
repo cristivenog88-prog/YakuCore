@@ -4,13 +4,24 @@ import TablaResponsiva, { type ColumnaTabla } from '@/components/yaku/tabla-resp
 import PanelLayout from '@/layouts/panel-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
+import MedidorDialog from './medidor-dialog';
 import ViviendaDialog from './vivienda-dialog';
+
+interface MedidorProps {
+    id: number;
+    vivienda_id: number;
+    correlativo: number;
+    codigo: string;
+    lectura_inicial: string;
+    activo: boolean;
+}
 
 interface ViviendaFila {
     id: number;
     socio_id: number;
     direccion: string;
     activa: boolean;
+    medidor: MedidorProps | null;
 }
 
 interface SocioProps {
@@ -26,9 +37,11 @@ interface Props {
     socio: SocioProps;
     viviendas: ViviendaFila[];
     puedeGestionar: boolean;
+    tieneMedidor: boolean;
+    prefijoJass: string | null;
 }
 
-export default function SocioShow({ socio, viviendas, puedeGestionar }: Props) {
+export default function SocioShow({ socio, viviendas, puedeGestionar, tieneMedidor, prefijoJass }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Panel', href: '/panel' },
         { title: 'Socios', href: '/panel/socios' },
@@ -51,6 +64,19 @@ export default function SocioShow({ socio, viviendas, puedeGestionar }: Props) {
             render: (fila) => <BadgeEstado variante={fila.activa ? 'exito' : 'neutro'}>{fila.activa ? 'Activa' : 'Inactiva'}</BadgeEstado>,
         },
     ];
+
+    if (tieneMedidor) {
+        columnas.push({
+            clave: 'medidor',
+            etiqueta: 'Medidor',
+            render: (fila) =>
+                fila.medidor ? (
+                    <span className="font-mono">{fila.medidor.codigo}</span>
+                ) : (
+                    <span className="text-muted-foreground">Sin medidor</span>
+                ),
+        });
+    }
 
     return (
         <PanelLayout breadcrumbs={breadcrumbs}>
@@ -105,6 +131,30 @@ export default function SocioShow({ socio, viviendas, puedeGestionar }: Props) {
                                           <Button variant="outline" size="sm" onClick={() => eliminarVivienda(fila)}>
                                               Eliminar
                                           </Button>
+                                          {tieneMedidor &&
+                                              prefijoJass &&
+                                              (fila.medidor ? (
+                                                  <MedidorDialog
+                                                      viviendaId={fila.id}
+                                                      prefijoJass={prefijoJass}
+                                                      medidor={fila.medidor}
+                                                      trigger={
+                                                          <Button variant="outline" size="sm">
+                                                              Editar medidor
+                                                          </Button>
+                                                      }
+                                                  />
+                                              ) : (
+                                                  <MedidorDialog
+                                                      viviendaId={fila.id}
+                                                      prefijoJass={prefijoJass}
+                                                      trigger={
+                                                          <Button variant="outline" size="sm">
+                                                              Agregar medidor
+                                                          </Button>
+                                                      }
+                                                  />
+                                              ))}
                                       </>
                                   )
                                 : undefined

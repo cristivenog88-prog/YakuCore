@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
+use App\Http\Controllers\Panel\MedidorController;
 use App\Http\Controllers\Panel\SocioController;
 use App\Http\Controllers\Panel\UsuarioController;
 use App\Http\Controllers\Panel\ViviendaController;
@@ -35,6 +36,11 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
         Route::delete('socios/{socio}/viviendas/{vivienda}', [ViviendaController::class, 'destroy'])
             ->middleware('password.confirm')
             ->name('socios.viviendas.destroy');
+
+        Route::middleware('jass.tiene-medidor')->group(function () {
+            Route::post('viviendas/{vivienda}/medidor', [MedidorController::class, 'store'])->name('viviendas.medidor.store');
+            Route::put('viviendas/{vivienda}/medidor/{medidor}', [MedidorController::class, 'update'])->name('viviendas.medidor.update');
+        });
 
         Route::middleware('rol:presidente')->group(function () {
             Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
