@@ -4,7 +4,7 @@ import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { AppSidebarBase } from '@/components/yaku/app-sidebar-base';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { AlertTriangle, Building2, LayoutGrid, Receipt, UserRound, Users } from 'lucide-react';
+import { AlertTriangle, Building2, CalendarDays, LayoutGrid, Megaphone, Receipt, UserRound, Users } from 'lucide-react';
 
 interface Props {
     children: React.ReactNode;
@@ -28,6 +28,8 @@ export default function PanelLayout({ children, breadcrumbs = [] }: Props) {
         items.push({ title: 'Socios', url: '/panel/socios', icon: UserRound });
         items.push({ title: 'Morosidad', url: '/panel/morosidad', icon: AlertTriangle });
         items.push({ title: 'Gastos', url: '/panel/gastos', icon: Receipt });
+        items.push({ title: 'Reuniones', url: '/panel/reuniones', icon: CalendarDays });
+        items.push({ title: 'Anuncios', url: '/panel/anuncios', icon: Megaphone });
     }
 
     if (auth.user.rol === 'presidente') {
