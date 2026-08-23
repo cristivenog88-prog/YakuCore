@@ -9,7 +9,7 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::middleware(['auth', 'rol:presidente,tesorero,vocal'])
+Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
     ->prefix('panel')
     ->name('panel.')
     ->group(function () {
