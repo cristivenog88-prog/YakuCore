@@ -15,6 +15,9 @@ use App\Http\Controllers\Panel\ReunionController;
 use App\Http\Controllers\Panel\SocioController;
 use App\Http\Controllers\Panel\UsuarioController;
 use App\Http\Controllers\Panel\ViviendaController;
+use App\Http\Controllers\Publico\BuscadorJassController;
+use App\Http\Controllers\Publico\ConsultaDeudaController;
+use App\Http\Controllers\Publico\PortalJassController;
 use App\Http\Controllers\Superadmin\DashboardController as SuperadminDashboardController;
 use App\Http\Controllers\Superadmin\JassController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +26,11 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
+
+Route::get('buscar-jass', [BuscadorJassController::class, 'index'])->name('buscar-jass');
+Route::get('jass/{jass}', [PortalJassController::class, 'show'])->name('portal.jass.show');
+Route::get('jass/{jass}/deuda', [ConsultaDeudaController::class, 'create'])->name('portal.deuda.create');
+Route::post('jass/{jass}/deuda', [ConsultaDeudaController::class, 'store'])->name('portal.deuda.store');
 
 Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
     ->prefix('panel')
