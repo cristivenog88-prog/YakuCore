@@ -4,7 +4,7 @@ import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { AppSidebarBase } from '@/components/yaku/app-sidebar-base';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { Building2, LayoutGrid, Users } from 'lucide-react';
+import { Building2, LayoutGrid, UserRound, Users } from 'lucide-react';
 
 interface Props {
     children: React.ReactNode;
@@ -23,6 +23,10 @@ export default function PanelLayout({ children, breadcrumbs = [] }: Props) {
     const inicio = esSuperadmin ? '/superadmin' : '/panel';
 
     const items: NavItem[] = [{ title: esSuperadmin ? 'JASS' : 'Panel', url: inicio, icon: esSuperadmin ? Building2 : LayoutGrid }];
+
+    if (!esSuperadmin) {
+        items.push({ title: 'Socios', url: '/panel/socios', icon: UserRound });
+    }
 
     if (auth.user.rol === 'presidente') {
         items.push({ title: 'Usuarios', url: '/panel/usuarios', icon: Users });

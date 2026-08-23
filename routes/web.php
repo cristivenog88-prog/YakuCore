@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
+use App\Http\Controllers\Panel\SocioController;
 use App\Http\Controllers\Panel\UsuarioController;
 use App\Http\Controllers\Superadmin\JassController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,16 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
     ->name('panel.')
     ->group(function () {
         Route::get('/', [PanelDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('socios', [SocioController::class, 'index'])->name('socios.index');
+        Route::get('socios/crear', [SocioController::class, 'create'])->name('socios.create');
+        Route::post('socios', [SocioController::class, 'store'])->name('socios.store');
+        Route::get('socios/{socio}/editar', [SocioController::class, 'edit'])->name('socios.edit');
+        Route::put('socios/{socio}', [SocioController::class, 'update'])->name('socios.update');
+
+        Route::delete('socios/{socio}', [SocioController::class, 'destroy'])
+            ->middleware('password.confirm')
+            ->name('socios.destroy');
 
         Route::middleware('rol:presidente')->group(function () {
             Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
@@ -65,6 +76,7 @@ Route::middleware(['auth', 'rol:superadmin', 'jass'])
     ->name('supervision.')
     ->group(function () {
         Route::get('/', [PanelDashboardController::class, 'index'])->name('dashboard');
+        Route::get('socios', [SocioController::class, 'index'])->name('socios.index');
     });
 
 require __DIR__.'/settings.php';
