@@ -34,7 +34,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 ## Frontend Bundling
 
-- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
+- If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `pnpm run build`, `pnpm run dev`, or `composer run dev`. Ask them.
 
 ## Documentation Files
 
@@ -118,6 +118,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - Inertia creates fully client-side rendered SPAs without modern SPA complexity, leveraging existing server-side patterns.
 - Components live in `resources/js/pages` (unless specified in `vite.config.js`). Use `Inertia::render()` for server-side routing instead of Blade views.
 - ALWAYS use `search-docs` tool for version-specific Inertia documentation and updated code examples.
+- IMPORTANT: Activate `inertia-react-development` when working with Inertia client-side patterns.
 
 # Inertia v2
 
@@ -153,7 +154,7 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 
 ## Vite Error
 
-- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `npm run build` or ask the user to run `npm run dev` or `composer run dev`.
+- If you receive an "Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest" error, you can run `pnpm run build` or ask the user to run `pnpm run dev` or `composer run dev`.
 
 === laravel/v12 rules ===
 
@@ -196,5 +197,11 @@ This project has domain-specific skills available in `**/skills/**`. You MUST ac
 - The `{name}` argument should not include the test suite directory. Use `php artisan make:test --pest SomeFeatureTest` instead of `php artisan make:test --pest Feature/SomeFeatureTest`.
 - Run tests: `php artisan test --compact` or filter: `php artisan test --compact --filter=testName`.
 - Do NOT delete tests without approval.
+
+=== inertia-react/core rules ===
+
+# Inertia + React
+
+- IMPORTANT: Activate `inertia-react-development` when working with Inertia React client-side patterns.
 
 </laravel-boost-guidelines>
