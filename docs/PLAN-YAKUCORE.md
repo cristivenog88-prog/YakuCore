@@ -380,3 +380,4 @@ Ambigüedades **no** cubiertas por la sección 8 de la spec. El plan avanza con 
 ✅ Fase 2 completada — 127 tests en verde — f55059c22aa9597c368171c8d70b098666011746
 ✅ Fase 3 completada — 169 tests en verde — 4ad541eff097c60acfa432f6c2557f1d19877322 (P1 aplicado: mantenimiento por vivienda, decisión 8.6)
 ✅ Fase 4 completada — 185 tests en verde — 7f89d61 (P4 aplicado: deuda computada desde la fecha de registro de la vivienda)
+✅ Fase 5 completada — 198 tests en verde — dce567d
