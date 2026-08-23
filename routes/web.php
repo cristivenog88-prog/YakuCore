@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Panel\AnuncioController;
+use App\Http\Controllers\Panel\AsistenciaController;
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
 use App\Http\Controllers\Panel\GastoController;
 use App\Http\Controllers\Panel\MedidorController;
@@ -8,6 +10,7 @@ use App\Http\Controllers\Panel\Pagos\ConsumoDirectoController;
 use App\Http\Controllers\Panel\Pagos\ConsumoMedidorController;
 use App\Http\Controllers\Panel\Pagos\MantenimientoController;
 use App\Http\Controllers\Panel\Pagos\ReciboController;
+use App\Http\Controllers\Panel\ReunionController;
 use App\Http\Controllers\Panel\SocioController;
 use App\Http\Controllers\Panel\UsuarioController;
 use App\Http\Controllers\Panel\ViviendaController;
@@ -78,6 +81,30 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
             ->middleware('password.confirm')
             ->name('gastos.destroy');
 
+        Route::get('reuniones', [ReunionController::class, 'index'])->name('reuniones.index');
+        Route::get('reuniones/crear', [ReunionController::class, 'create'])->name('reuniones.create');
+        Route::post('reuniones', [ReunionController::class, 'store'])->name('reuniones.store');
+        Route::get('reuniones/{reunion}', [ReunionController::class, 'show'])->name('reuniones.show');
+        Route::get('reuniones/{reunion}/editar', [ReunionController::class, 'edit'])->name('reuniones.edit');
+        Route::put('reuniones/{reunion}', [ReunionController::class, 'update'])->name('reuniones.update');
+        Route::post('reuniones/{reunion}/cancelar', [ReunionController::class, 'cancelar'])->name('reuniones.cancelar');
+
+        Route::get('reuniones/{reunion}/asistencia', [AsistenciaController::class, 'create'])->name('reuniones.asistencia.create');
+
+        Route::post('reuniones/{reunion}/asistencia', [AsistenciaController::class, 'store'])
+            ->middleware('password.confirm')
+            ->name('reuniones.asistencia.store');
+
+        Route::get('anuncios', [AnuncioController::class, 'index'])->name('anuncios.index');
+        Route::get('anuncios/crear', [AnuncioController::class, 'create'])->name('anuncios.create');
+        Route::post('anuncios', [AnuncioController::class, 'store'])->name('anuncios.store');
+        Route::get('anuncios/{anuncio}/editar', [AnuncioController::class, 'edit'])->name('anuncios.edit');
+        Route::put('anuncios/{anuncio}', [AnuncioController::class, 'update'])->name('anuncios.update');
+
+        Route::delete('anuncios/{anuncio}', [AnuncioController::class, 'destroy'])
+            ->middleware('password.confirm')
+            ->name('anuncios.destroy');
+
         Route::middleware('rol:presidente')->group(function () {
             Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
             Route::get('usuarios/crear', [UsuarioController::class, 'create'])->name('usuarios.create');
@@ -132,6 +159,9 @@ Route::middleware(['auth', 'rol:superadmin', 'jass'])
         Route::get('morosidad', [MorosidadController::class, 'index'])->name('morosidad.index');
         Route::get('gastos', [GastoController::class, 'index'])->name('gastos.index');
         Route::get('gastos/{gasto}/comprobante', [GastoController::class, 'comprobante'])->name('gastos.comprobante');
+        Route::get('reuniones', [ReunionController::class, 'index'])->name('reuniones.index');
+        Route::get('reuniones/{reunion}', [ReunionController::class, 'show'])->name('reuniones.show');
+        Route::get('anuncios', [AnuncioController::class, 'index'])->name('anuncios.index');
     });
 
 require __DIR__.'/settings.php';
