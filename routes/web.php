@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
 use App\Http\Controllers\Panel\UsuarioController;
-use App\Http\Controllers\Superadmin\DashboardController as SuperadminDashboardController;
 use App\Http\Controllers\Superadmin\JassController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -34,7 +33,9 @@ Route::middleware(['auth', 'rol:superadmin'])
     ->prefix('superadmin')
     ->name('superadmin.')
     ->group(function () {
-        Route::get('/', [SuperadminDashboardController::class, 'index'])->name('dashboard');
+        // El panel superadmin es, por ahora, el listado de JASS con botón
+        // "Supervisar" (KPIs reales en Fase 7).
+        Route::get('/', [JassController::class, 'index'])->name('dashboard');
 
         Route::get('jass', [JassController::class, 'index'])->name('jass.index');
         Route::get('jass/crear', [JassController::class, 'create'])->name('jass.create');

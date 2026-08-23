@@ -64,6 +64,9 @@ export default function JassIndex({ jass }: Props) {
                                     <td className="px-4 py-2">
                                         <div className="flex gap-2">
                                             <Button variant="outline" size="sm" asChild>
+                                                <Link href={route('supervision.dashboard', fila.id)}>Supervisar</Link>
+                                            </Button>
+                                            <Button variant="outline" size="sm" asChild>
                                                 <Link href={route('superadmin.jass.edit', fila.id)}>Editar</Link>
                                             </Button>
                                             <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
