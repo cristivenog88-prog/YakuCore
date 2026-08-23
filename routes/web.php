@@ -9,10 +9,19 @@ Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('panel', [PanelDashboardController::class, 'index'])->name('panel.dashboard');
-    Route::get('superadmin', [SuperadminDashboardController::class, 'index'])->name('superadmin.dashboard');
-});
+Route::middleware(['auth', 'rol:presidente,tesorero,vocal'])
+    ->prefix('panel')
+    ->name('panel.')
+    ->group(function () {
+        Route::get('/', [PanelDashboardController::class, 'index'])->name('dashboard');
+    });
+
+Route::middleware(['auth', 'rol:superadmin'])
+    ->prefix('superadmin')
+    ->name('superadmin.')
+    ->group(function () {
+        Route::get('/', [SuperadminDashboardController::class, 'index'])->name('dashboard');
+    });
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
