@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
+use App\Http\Controllers\Panel\GastoController;
 use App\Http\Controllers\Panel\MedidorController;
 use App\Http\Controllers\Panel\MorosidadController;
 use App\Http\Controllers\Panel\Pagos\ConsumoDirectoController;
@@ -66,6 +67,17 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
             Route::post('pagos/consumo-directo', [ConsumoDirectoController::class, 'store'])->name('pagos.consumo-directo.store');
         });
 
+        Route::get('gastos', [GastoController::class, 'index'])->name('gastos.index');
+        Route::get('gastos/crear', [GastoController::class, 'create'])->name('gastos.create');
+        Route::post('gastos', [GastoController::class, 'store'])->name('gastos.store');
+        Route::get('gastos/{gasto}/editar', [GastoController::class, 'edit'])->name('gastos.edit');
+        Route::put('gastos/{gasto}', [GastoController::class, 'update'])->name('gastos.update');
+        Route::get('gastos/{gasto}/comprobante', [GastoController::class, 'comprobante'])->name('gastos.comprobante');
+
+        Route::delete('gastos/{gasto}', [GastoController::class, 'destroy'])
+            ->middleware('password.confirm')
+            ->name('gastos.destroy');
+
         Route::middleware('rol:presidente')->group(function () {
             Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
             Route::get('usuarios/crear', [UsuarioController::class, 'create'])->name('usuarios.create');
@@ -118,6 +130,8 @@ Route::middleware(['auth', 'rol:superadmin', 'jass'])
         Route::get('socios', [SocioController::class, 'index'])->name('socios.index');
         Route::get('socios/{socio}', [SocioController::class, 'show'])->name('socios.show');
         Route::get('morosidad', [MorosidadController::class, 'index'])->name('morosidad.index');
+        Route::get('gastos', [GastoController::class, 'index'])->name('gastos.index');
+        Route::get('gastos/{gasto}/comprobante', [GastoController::class, 'comprobante'])->name('gastos.comprobante');
     });
 
 require __DIR__.'/settings.php';
