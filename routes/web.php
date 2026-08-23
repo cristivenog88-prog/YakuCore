@@ -57,5 +57,14 @@ Route::middleware(['auth', 'rol:superadmin'])
             ->name('jass.usuarios.destroy');
     });
 
+// Modo supervisión (superadmin): reutiliza los controllers de /panel sobre
+// una JASS elegida por ruta; estructuralmente de solo lectura (sección 3).
+Route::middleware(['auth', 'rol:superadmin', 'jass'])
+    ->prefix('supervision/{jass}')
+    ->name('supervision.')
+    ->group(function () {
+        Route::get('/', [PanelDashboardController::class, 'index'])->name('dashboard');
+    });
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
