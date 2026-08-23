@@ -1,4 +1,4 @@
-import AppLayout from '@/layouts/app-layout';
+import PanelLayout from '@/layouts/panel-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
@@ -41,7 +41,7 @@ export default function UsuarioCreate({ jass, esSuperadmin }: Props) {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <PanelLayout breadcrumbs={breadcrumbs}>
             <Head title="Nuevo usuario" />
             <div className="flex flex-col gap-4 p-4">
                 <h1 className="text-lg font-semibold">Nuevo usuario de {jass.nombre}</h1>
@@ -56,6 +56,6 @@ export default function UsuarioCreate({ jass, esSuperadmin }: Props) {
                     esEdicion={false}
                 />
             </div>
-        </AppLayout>
+        </PanelLayout>
     );
 }

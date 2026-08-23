@@ -4,7 +4,7 @@ import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { AppSidebarBase } from '@/components/yaku/app-sidebar-base';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { LayoutGrid, Users } from 'lucide-react';
+import { Building2, LayoutGrid, Users } from 'lucide-react';
 
 interface Props {
     children: React.ReactNode;
@@ -12,14 +12,17 @@ interface Props {
 }
 
 /**
- * Layout de presidente/tesorero/vocal, y de superadmin en modo supervisión
- * (docs/design-system.md §7). El propio dashboard indica cuando se está
- * supervisando (prop `supervisando` de panel/dashboard.tsx).
+ * Layout de presidente/tesorero/vocal, de superadmin en modo supervisión, y
+ * layout por defecto para páginas de cuenta (Settings) accesibles por
+ * cualquier rol (docs/design-system.md §7) — por eso el ítem "inicio" es
+ * consciente del rol: nunca enlaza a una ruta que el usuario tiene prohibida.
  */
 export default function PanelLayout({ children, breadcrumbs = [] }: Props) {
     const { auth } = usePage<SharedData>().props;
+    const esSuperadmin = auth.user.rol === 'superadmin';
+    const inicio = esSuperadmin ? '/superadmin' : '/panel';
 
-    const items: NavItem[] = [{ title: 'Panel', url: '/panel', icon: LayoutGrid }];
+    const items: NavItem[] = [{ title: esSuperadmin ? 'JASS' : 'Panel', url: inicio, icon: esSuperadmin ? Building2 : LayoutGrid }];
 
     if (auth.user.rol === 'presidente') {
         items.push({ title: 'Usuarios', url: '/panel/usuarios', icon: Users });
@@ -27,7 +30,7 @@ export default function PanelLayout({ children, breadcrumbs = [] }: Props) {
 
     return (
         <AppShell variant="sidebar">
-            <AppSidebarBase inicio="/panel" items={items} />
+            <AppSidebarBase inicio={inicio} items={items} />
             <AppContent variant="sidebar">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}

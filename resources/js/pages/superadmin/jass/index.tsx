@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import AppLayout from '@/layouts/app-layout';
+import TablaResponsiva, { type ColumnaTabla } from '@/components/yaku/tabla-responsiva';
+import SuperadminLayout from '@/layouts/superadmin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 
@@ -21,6 +22,14 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'JASS', href: '/superadmin/jass' },
 ];
 
+const columnas: ColumnaTabla<JassFila>[] = [
+    { clave: 'nombre', etiqueta: 'Nombre', render: (fila) => fila.nombre },
+    { clave: 'comunidad', etiqueta: 'Comunidad', render: (fila) => fila.comunidad },
+    { clave: 'distrito', etiqueta: 'Distrito', render: (fila) => fila.distrito },
+    { clave: 'tiene_medidor', etiqueta: 'Medidor', render: (fila) => (fila.tiene_medidor ? 'Sí' : 'No') },
+    { clave: 'prefijo', etiqueta: 'Prefijo', render: (fila) => fila.prefijo },
+];
+
 export default function JassIndex({ jass }: Props) {
     const eliminar = (fila: JassFila) => {
         if (!confirm(`¿Eliminar la JASS "${fila.nombre}"? Esta acción requiere confirmar tu contraseña.`)) {
@@ -31,7 +40,7 @@ export default function JassIndex({ jass }: Props) {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <SuperadminLayout breadcrumbs={breadcrumbs}>
             <Head title="JASS" />
             <div className="flex flex-col gap-4 p-4">
                 <div className="flex items-center justify-between">
@@ -41,52 +50,26 @@ export default function JassIndex({ jass }: Props) {
                     </Button>
                 </div>
 
-                <div className="overflow-x-auto rounded-md border">
-                    <table className="w-full text-sm">
-                        <thead className="bg-muted text-muted-foreground text-left">
-                            <tr>
-                                <th className="px-4 py-2 font-medium">Nombre</th>
-                                <th className="px-4 py-2 font-medium">Comunidad</th>
-                                <th className="px-4 py-2 font-medium">Distrito</th>
-                                <th className="px-4 py-2 font-medium">Medidor</th>
-                                <th className="px-4 py-2 font-medium">Prefijo</th>
-                                <th className="px-4 py-2 font-medium">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {jass.map((fila) => (
-                                <tr key={fila.id} className="border-t">
-                                    <td className="px-4 py-2">{fila.nombre}</td>
-                                    <td className="px-4 py-2">{fila.comunidad}</td>
-                                    <td className="px-4 py-2">{fila.distrito}</td>
-                                    <td className="px-4 py-2">{fila.tiene_medidor ? 'Sí' : 'No'}</td>
-                                    <td className="px-4 py-2">{fila.prefijo}</td>
-                                    <td className="px-4 py-2">
-                                        <div className="flex gap-2">
-                                            <Button variant="outline" size="sm" asChild>
-                                                <Link href={route('supervision.dashboard', fila.id)}>Supervisar</Link>
-                                            </Button>
-                                            <Button variant="outline" size="sm" asChild>
-                                                <Link href={route('superadmin.jass.edit', fila.id)}>Editar</Link>
-                                            </Button>
-                                            <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
-                                                Eliminar
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                            {jass.length === 0 && (
-                                <tr>
-                                    <td colSpan={6} className="text-muted-foreground px-4 py-6 text-center">
-                                        Todavía no hay JASS registradas.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                <TablaResponsiva
+                    columnas={columnas}
+                    filas={jass}
+                    obtenerLlave={(fila) => fila.id}
+                    vacio="Todavía no hay JASS registradas."
+                    acciones={(fila) => (
+                        <>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={route('supervision.dashboard', fila.id)}>Supervisar</Link>
+                            </Button>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={route('superadmin.jass.edit', fila.id)}>Editar</Link>
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
+                                Eliminar
+                            </Button>
+                        </>
+                    )}
+                />
             </div>
-        </AppLayout>
+        </SuperadminLayout>
     );
 }

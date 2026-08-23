@@ -1,4 +1,4 @@
-import AppLayout from '@/layouts/app-layout';
+import SuperadminLayout from '@/layouts/superadmin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
@@ -27,7 +27,7 @@ export default function JassCreate() {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <SuperadminLayout breadcrumbs={breadcrumbs}>
             <Head title="Nueva JASS" />
             <div className="flex flex-col gap-4 p-4">
                 <h1 className="text-lg font-semibold">Nueva JASS</h1>
@@ -40,6 +40,6 @@ export default function JassCreate() {
                     textoBoton="Crear JASS"
                 />
             </div>
-        </AppLayout>
+        </SuperadminLayout>
     );
 }

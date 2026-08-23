@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import AppLayout from '@/layouts/app-layout';
+import TablaResponsiva, { type ColumnaTabla } from '@/components/yaku/tabla-responsiva';
+import PanelLayout from '@/layouts/panel-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 
@@ -51,8 +52,14 @@ export default function UsuariosIndex({ jass, usuarios, esSuperadmin }: Props) {
         router.delete(rutaDestroy);
     };
 
+    const columnas: ColumnaTabla<UsuarioFila>[] = [
+        { clave: 'name', etiqueta: 'Nombre', render: (fila) => fila.name },
+        { clave: 'email', etiqueta: 'Correo', render: (fila) => fila.email },
+        { clave: 'rol', etiqueta: 'Rol', render: (fila) => etiquetasRol[fila.rol] ?? fila.rol },
+    ];
+
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <PanelLayout breadcrumbs={breadcrumbs}>
             <Head title={`Usuarios de ${jass.nombre}`} />
             <div className="flex flex-col gap-4 p-4">
                 <div className="flex items-center justify-between">
@@ -62,51 +69,29 @@ export default function UsuariosIndex({ jass, usuarios, esSuperadmin }: Props) {
                     </Button>
                 </div>
 
-                <div className="overflow-x-auto rounded-md border">
-                    <table className="w-full text-sm">
-                        <thead className="bg-muted text-muted-foreground text-left">
-                            <tr>
-                                <th className="px-4 py-2 font-medium">Nombre</th>
-                                <th className="px-4 py-2 font-medium">Correo</th>
-                                <th className="px-4 py-2 font-medium">Rol</th>
-                                <th className="px-4 py-2 font-medium">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {usuarios.map((fila) => {
-                                const rutaEditar = esSuperadmin
-                                    ? route('superadmin.jass.usuarios.edit', [jass.id, fila.id])
-                                    : route('panel.usuarios.edit', fila.id);
+                <TablaResponsiva
+                    columnas={columnas}
+                    filas={usuarios}
+                    obtenerLlave={(fila) => fila.id}
+                    vacio="Todavía no hay usuarios registrados."
+                    acciones={(fila) => {
+                        const rutaEditar = esSuperadmin
+                            ? route('superadmin.jass.usuarios.edit', [jass.id, fila.id])
+                            : route('panel.usuarios.edit', fila.id);
 
-                                return (
-                                    <tr key={fila.id} className="border-t">
-                                        <td className="px-4 py-2">{fila.name}</td>
-                                        <td className="px-4 py-2">{fila.email}</td>
-                                        <td className="px-4 py-2">{etiquetasRol[fila.rol] ?? fila.rol}</td>
-                                        <td className="px-4 py-2">
-                                            <div className="flex gap-2">
-                                                <Button variant="outline" size="sm" asChild>
-                                                    <Link href={rutaEditar}>Editar</Link>
-                                                </Button>
-                                                <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
-                                                    Eliminar
-                                                </Button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                            {usuarios.length === 0 && (
-                                <tr>
-                                    <td colSpan={4} className="text-muted-foreground px-4 py-6 text-center">
-                                        Todavía no hay usuarios registrados.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                        return (
+                            <>
+                                <Button variant="outline" size="sm" asChild>
+                                    <Link href={rutaEditar}>Editar</Link>
+                                </Button>
+                                <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
+                                    Eliminar
+                                </Button>
+                            </>
+                        );
+                    }}
+                />
             </div>
-        </AppLayout>
+        </PanelLayout>
     );
 }

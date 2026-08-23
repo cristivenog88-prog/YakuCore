@@ -1,4 +1,4 @@
-import AppLayout from '@/layouts/app-layout';
+import PanelLayout from '@/layouts/panel-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 
@@ -16,7 +16,7 @@ export default function PanelDashboard({ supervisando }: Props) {
         : [{ title: 'Panel', href: '/panel' }];
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <PanelLayout breadcrumbs={breadcrumbs}>
             <Head title={supervisando ? `Supervisando ${supervisando.nombre}` : 'Panel'} />
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 {supervisando && (
@@ -26,6 +26,6 @@ export default function PanelDashboard({ supervisando }: Props) {
                 )}
                 <p className="text-muted-foreground text-sm">Los indicadores de la JASS estarán disponibles en una fase posterior.</p>
             </div>
-        </AppLayout>
+        </PanelLayout>
     );
 }

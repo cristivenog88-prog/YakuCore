@@ -1,4 +1,4 @@
-import AppLayout from '@/layouts/app-layout';
+import PanelLayout from '@/layouts/panel-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
@@ -51,7 +51,7 @@ export default function UsuarioEdit({ jass, usuario, esSuperadmin }: Props) {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <PanelLayout breadcrumbs={breadcrumbs}>
             <Head title={`Editar ${usuario.name}`} />
             <div className="flex flex-col gap-4 p-4">
                 <h1 className="text-lg font-semibold">Editar {usuario.name}</h1>
@@ -66,6 +66,6 @@ export default function UsuarioEdit({ jass, usuario, esSuperadmin }: Props) {
                     esEdicion={true}
                 />
             </div>
-        </AppLayout>
+        </PanelLayout>
     );
 }

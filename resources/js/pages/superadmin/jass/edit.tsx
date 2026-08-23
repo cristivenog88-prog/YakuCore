@@ -1,4 +1,4 @@
-import AppLayout from '@/layouts/app-layout';
+import SuperadminLayout from '@/layouts/superadmin-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
@@ -42,7 +42,7 @@ export default function JassEdit({ jass }: Props) {
     };
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <SuperadminLayout breadcrumbs={breadcrumbs}>
             <Head title={`Editar ${jass.nombre}`} />
             <div className="flex flex-col gap-4 p-4">
                 <h1 className="text-lg font-semibold">Editar {jass.nombre}</h1>
@@ -55,6 +55,6 @@ export default function JassEdit({ jass }: Props) {
                     textoBoton="Guardar cambios"
                 />
             </div>
-        </AppLayout>
+        </SuperadminLayout>
     );
 }
