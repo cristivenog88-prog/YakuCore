@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
 use App\Http\Controllers\Panel\MedidorController;
+use App\Http\Controllers\Panel\Pagos\ConsumoMedidorController;
 use App\Http\Controllers\Panel\Pagos\MantenimientoController;
 use App\Http\Controllers\Panel\Pagos\ReciboController;
 use App\Http\Controllers\Panel\SocioController;
@@ -46,6 +47,9 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
             Route::post('viviendas/{vivienda}/medidor/{medidor}/reemplazar', [MedidorController::class, 'reemplazar'])
                 ->middleware('password.confirm')
                 ->name('viviendas.medidor.reemplazar');
+
+            Route::get('pagos/consumo-medidor/crear', [ConsumoMedidorController::class, 'create'])->name('pagos.consumo-medidor.create');
+            Route::post('pagos/consumo-medidor', [ConsumoMedidorController::class, 'store'])->name('pagos.consumo-medidor.store');
         });
 
         Route::get('recibos/{pago}', [ReciboController::class, 'show'])->name('recibos.show');
