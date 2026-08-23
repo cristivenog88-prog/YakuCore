@@ -40,6 +40,10 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
         Route::middleware('jass.tiene-medidor')->group(function () {
             Route::post('viviendas/{vivienda}/medidor', [MedidorController::class, 'store'])->name('viviendas.medidor.store');
             Route::put('viviendas/{vivienda}/medidor/{medidor}', [MedidorController::class, 'update'])->name('viviendas.medidor.update');
+
+            Route::post('viviendas/{vivienda}/medidor/{medidor}/reemplazar', [MedidorController::class, 'reemplazar'])
+                ->middleware('password.confirm')
+                ->name('viviendas.medidor.reemplazar');
         });
 
         Route::middleware('rol:presidente')->group(function () {

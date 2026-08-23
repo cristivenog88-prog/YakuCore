@@ -5,6 +5,7 @@ import PanelLayout from '@/layouts/panel-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 import MedidorDialog from './medidor-dialog';
+import ReemplazarMedidorDialog from './reemplazar-medidor-dialog';
 import ViviendaDialog from './vivienda-dialog';
 
 interface MedidorProps {
@@ -134,16 +135,27 @@ export default function SocioShow({ socio, viviendas, puedeGestionar, tieneMedid
                                           {tieneMedidor &&
                                               prefijoJass &&
                                               (fila.medidor ? (
-                                                  <MedidorDialog
-                                                      viviendaId={fila.id}
-                                                      prefijoJass={prefijoJass}
-                                                      medidor={fila.medidor}
-                                                      trigger={
-                                                          <Button variant="outline" size="sm">
-                                                              Editar medidor
-                                                          </Button>
-                                                      }
-                                                  />
+                                                  <>
+                                                      <MedidorDialog
+                                                          viviendaId={fila.id}
+                                                          prefijoJass={prefijoJass}
+                                                          medidor={fila.medidor}
+                                                          trigger={
+                                                              <Button variant="outline" size="sm">
+                                                                  Editar medidor
+                                                              </Button>
+                                                          }
+                                                      />
+                                                      <ReemplazarMedidorDialog
+                                                          viviendaId={fila.id}
+                                                          medidorId={fila.medidor.id}
+                                                          trigger={
+                                                              <Button variant="outline" size="sm">
+                                                                  Reemplazar medidor
+                                                              </Button>
+                                                          }
+                                                      />
+                                                  </>
                                               ) : (
                                                   <MedidorDialog
                                                       viviendaId={fila.id}

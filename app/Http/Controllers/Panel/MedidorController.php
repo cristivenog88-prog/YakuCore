@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Medidores\ReemplazarMedidorRequest;
 use App\Http\Requests\Medidores\StoreMedidorRequest;
 use App\Http\Requests\Medidores\UpdateMedidorRequest;
 use App\Models\Medidor;
 use App\Models\Vivienda;
 use App\Services\Auditoria\RegistradorAuditoria;
+use App\Services\Medidores\ReemplazoMedidor;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -39,6 +41,23 @@ class MedidorController extends Controller
         $medidor->update($request->validated());
 
         $this->auditoria->registrar('actualizar', $medidor, $request->validated());
+
+        return to_route('panel.socios.show', $vivienda->socio_id);
+    }
+
+    /**
+     * Flujo de reemplazo de medidor (8.3): requiere confirmar contraseña
+     * (password.confirm en la ruta) y deja traza de las lecturas previas.
+     */
+    public function reemplazar(
+        ReemplazarMedidorRequest $request,
+        Vivienda $vivienda,
+        Medidor $medidor,
+        ReemplazoMedidor $servicio
+    ): RedirectResponse {
+        $this->authorize('update', $medidor);
+
+        $servicio->ejecutar($medidor, $request->validated('motivo'));
 
         return to_route('panel.socios.show', $vivienda->socio_id);
     }
