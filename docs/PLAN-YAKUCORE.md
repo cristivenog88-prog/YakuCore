@@ -382,3 +382,4 @@ Ambigüedades **no** cubiertas por la sección 8 de la spec. El plan avanza con 
 ✅ Fase 4 completada — 185 tests en verde — 7f89d61 (P4 aplicado: deuda computada desde la fecha de registro de la vivienda)
 ✅ Fase 5 completada — 198 tests en verde — dce567d
 ✅ Fase 6 completada — 214 tests en verde — a986057 (P10 aplicado: reunión cancelada no se reprograma, se cierra y se crea otra)
+✅ Fase 7 completada — 223 tests en verde — 1509c17
