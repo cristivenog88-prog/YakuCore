@@ -59,6 +59,34 @@
 }
 
 /*
+  Paleta institucional YakuCore (spec §7.2) — Fase 0: solo se definen los
+  tokens de color. El sistema de diseño completo (tipografía, componentes,
+  aplicación de estos tokens a shadcn) se define en docs/design-system.md
+  en la Fase 1.5; no usar todavía estos tokens fuera de esa fase.
+*/
+@theme {
+    --color-yaku-900: #021f4a;
+    --color-yaku-800: #06396c;
+    --color-yaku-600: #065b96;
+    --color-yaku-400: #6496b1;
+    --color-yaku-200: #b1ccdf;
+
+    --color-yaku-neutral-950: #0a1420;
+    --color-yaku-neutral-800: #26313d;
+    --color-yaku-neutral-600: #4c5b69;
+    --color-yaku-neutral-400: #8b98a3;
+    --color-yaku-neutral-200: #d7dee3;
+    --color-yaku-neutral-50: #f5f7f9;
+
+    --color-yaku-exito: #0f6e5c;
+    --color-yaku-exito-suave: #dceee8;
+    --color-yaku-error: #9b2c2c;
+    --color-yaku-error-suave: #f3dede;
+    --color-yaku-advertencia: #8a5a15;
+    --color-yaku-advertencia-suave: #f3e6d0;
+}
+
+/*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.
