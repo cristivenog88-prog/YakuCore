@@ -77,20 +77,18 @@ export default function SociosIndex({ socios, busqueda, puedeGestionar }: Props)
                     filas={socios}
                     obtenerLlave={(fila) => fila.id}
                     vacio="No se encontraron socios."
-                    acciones={
-                        puedeGestionar
-                            ? (fila) => (
-                                  <>
-                                      <Button variant="outline" size="sm" asChild>
-                                          <Link href={route('panel.socios.edit', fila.id)}>Editar</Link>
-                                      </Button>
-                                      <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
-                                          Eliminar
-                                      </Button>
-                                  </>
-                              )
-                            : undefined
-                    }
+                    acciones={(fila) => (
+                        <>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={route('panel.socios.show', fila.id)}>Ver ficha</Link>
+                            </Button>
+                            {puedeGestionar && (
+                                <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
+                                    Eliminar
+                                </Button>
+                            )}
+                        </>
+                    )}
                 />
             </div>
         </PanelLayout>

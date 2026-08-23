@@ -39,6 +39,17 @@ class SocioController extends Controller
         ]);
     }
 
+    public function show(Request $request, Socio $socio): Response
+    {
+        $this->authorize('view', $socio);
+
+        return Inertia::render('panel/socios/show', [
+            'socio' => $socio->only(['id', 'nombres', 'apellidos', 'dni', 'telefono', 'direccion']),
+            'viviendas' => $socio->viviendas()->orderBy('id')->get(['id', 'socio_id', 'direccion', 'activa']),
+            'puedeGestionar' => $request->user()->can('create', Socio::class),
+        ]);
+    }
+
     public function create(): Response
     {
         $this->authorize('create', Socio::class);
