@@ -1,11 +1,11 @@
 <?php
 
 test('un error de validación llega en español', function () {
-    $response = $this->post('/register', []);
+    $response = $this->post('/login', []);
 
-    $response->assertSessionHasErrors('name');
+    $response->assertSessionHasErrors('email');
 
     $errores = session('errors')->getBag('default');
 
-    expect($errores->first('name'))->toContain('obligatorio');
+    expect($errores->first('email'))->toContain('obligatorio');
 });

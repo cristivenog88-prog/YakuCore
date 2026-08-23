@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\Rol;
+use App\Models\Jass;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +32,8 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'rol' => Rol::Presidente,
+            'jass_id' => Jass::factory(),
         ];
     }
 
@@ -40,6 +44,38 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function superadmin(): static
+    {
+        return $this->state(fn () => [
+            'rol' => Rol::Superadmin,
+            'jass_id' => null,
+        ]);
+    }
+
+    public function presidente(?Jass $jass = null): static
+    {
+        return $this->state(fn () => [
+            'rol' => Rol::Presidente,
+            'jass_id' => $jass?->id ?? Jass::factory(),
+        ]);
+    }
+
+    public function tesorero(?Jass $jass = null): static
+    {
+        return $this->state(fn () => [
+            'rol' => Rol::Tesorero,
+            'jass_id' => $jass?->id ?? Jass::factory(),
+        ]);
+    }
+
+    public function vocal(?Jass $jass = null): static
+    {
+        return $this->state(fn () => [
+            'rol' => Rol::Vocal,
+            'jass_id' => $jass?->id ?? Jass::factory(),
         ]);
     }
 }
