@@ -188,3 +188,16 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* Recibo imprimible (docs/design-system.md §5, regla 5.9). */
+@media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+}
