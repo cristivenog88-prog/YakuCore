@@ -2,24 +2,64 @@
 
 namespace Database\Seeders;
 
+use App\Models\Jass;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
-     * Seed the application's database.
+     * Datos demo: 1 superadmin + 2 JASS (una con medidor, otra sin) con
+     * presidente/tesorero/vocal cada una. Credenciales documentadas en
+     * README.md — todas usan la contraseña "password".
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory()->superadmin()->create([
+            'name' => 'Administrador YakuCore',
+            'email' => 'superadmin@yakucore.pe',
+        ]);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $jassConMedidor = Jass::factory()->conMedidor()->create([
+            'nombre' => 'Villa Sol',
+            'comunidad' => 'Villa Sol',
+            'distrito' => 'Independencia',
+        ]);
+
+        User::factory()->presidente($jassConMedidor)->create([
+            'name' => 'Presidente Villa Sol',
+            'email' => 'presidente.villasol@yakucore.pe',
+        ]);
+
+        User::factory()->tesorero($jassConMedidor)->create([
+            'name' => 'Tesorero Villa Sol',
+            'email' => 'tesorero.villasol@yakucore.pe',
+        ]);
+
+        User::factory()->vocal($jassConMedidor)->create([
+            'name' => 'Vocal Villa Sol',
+            'email' => 'vocal.villasol@yakucore.pe',
+        ]);
+
+        $jassSinMedidor = Jass::factory()->sinMedidor()->create([
+            'nombre' => 'Los Andes',
+            'comunidad' => 'Los Andes',
+            'distrito' => 'Huaraz',
+        ]);
+
+        User::factory()->presidente($jassSinMedidor)->create([
+            'name' => 'Presidente Los Andes',
+            'email' => 'presidente.losandes@yakucore.pe',
+        ]);
+
+        User::factory()->tesorero($jassSinMedidor)->create([
+            'name' => 'Tesorero Los Andes',
+            'email' => 'tesorero.losandes@yakucore.pe',
+        ]);
+
+        User::factory()->vocal($jassSinMedidor)->create([
+            'name' => 'Vocal Los Andes',
+            'email' => 'vocal.losandes@yakucore.pe',
         ]);
     }
 }
