@@ -48,11 +48,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Cobrar consumo (medidor)', href: '/panel/pagos/consumo-medidor/crear' },
 ];
 
+/** Precarga desde la Vista Morosidad (?socio_id=&medidor_id=&periodo=). */
+function leerPrecarga() {
+    const params = new URLSearchParams(window.location.search);
+
+    return {
+        socio_id: params.get('socio_id') ?? '',
+        medidor_id: params.get('medidor_id') ?? '',
+        periodo: params.get('periodo') ?? new Date().toISOString().slice(0, 7),
+    };
+}
+
 export default function ConsumoMedidorCreate({ socios, medidores, previsualizacion }: Props) {
+    const precarga = useMemo(leerPrecarga, []);
     const { data, setData, post, processing, errors } = useForm<FormData>({
-        socio_id: '',
-        medidor_id: '',
-        periodo: new Date().toISOString().slice(0, 7),
+        socio_id: precarga.socio_id,
+        medidor_id: precarga.medidor_id,
+        periodo: precarga.periodo,
         lectura_actual: '',
         fecha_pago: new Date().toISOString().slice(0, 10),
     });

@@ -41,11 +41,23 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Cobrar mantenimiento', href: '/panel/pagos/mantenimiento/crear' },
 ];
 
+/** Precarga desde la Vista Morosidad (?socio_id=&vivienda_id=&periodo=). */
+function leerPrecarga() {
+    const params = new URLSearchParams(window.location.search);
+
+    return {
+        socio_id: params.get('socio_id') ?? '',
+        vivienda_id: params.get('vivienda_id') ?? '',
+        periodo: params.get('periodo') ?? new Date().toISOString().slice(0, 7),
+    };
+}
+
 export default function MantenimientoCreate({ socios, viviendas }: Props) {
+    const precarga = useMemo(leerPrecarga, []);
     const { data, setData, post, processing, errors } = useForm<FormData>({
-        socio_id: '',
-        vivienda_id: '',
-        periodo: new Date().toISOString().slice(0, 7),
+        socio_id: precarga.socio_id,
+        vivienda_id: precarga.vivienda_id,
+        periodo: precarga.periodo,
         monto: '',
         fecha_pago: new Date().toISOString().slice(0, 10),
     });

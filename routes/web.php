@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
 use App\Http\Controllers\Panel\MedidorController;
+use App\Http\Controllers\Panel\MorosidadController;
 use App\Http\Controllers\Panel\Pagos\ConsumoDirectoController;
 use App\Http\Controllers\Panel\Pagos\ConsumoMedidorController;
 use App\Http\Controllers\Panel\Pagos\MantenimientoController;
@@ -54,6 +55,8 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
         });
 
         Route::get('recibos/{pago}', [ReciboController::class, 'show'])->name('recibos.show');
+
+        Route::get('morosidad', [MorosidadController::class, 'index'])->name('morosidad.index');
 
         Route::get('pagos/mantenimiento/crear', [MantenimientoController::class, 'create'])->name('pagos.mantenimiento.create');
         Route::post('pagos/mantenimiento', [MantenimientoController::class, 'store'])->name('pagos.mantenimiento.store');
@@ -114,6 +117,7 @@ Route::middleware(['auth', 'rol:superadmin', 'jass'])
         Route::get('/', [PanelDashboardController::class, 'index'])->name('dashboard');
         Route::get('socios', [SocioController::class, 'index'])->name('socios.index');
         Route::get('socios/{socio}', [SocioController::class, 'show'])->name('socios.show');
+        Route::get('morosidad', [MorosidadController::class, 'index'])->name('morosidad.index');
     });
 
 require __DIR__.'/settings.php';
