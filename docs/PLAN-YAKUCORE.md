@@ -371,3 +371,7 @@ Ambigüedades **no** cubiertas por la sección 8 de la spec. El plan avanza con 
 - **P8 — ¿El vocal ve la ficha completa del socio (teléfono, dirección) o solo su estado de deuda?** Default: ficha completa en solo lectura.
 - **P9 — Transparencia pública:** ¿rango temporal y detalle de gastos? Default: año en curso con selector de año; gastos con descripción/monto/tipo, sin fotos.
 - **P10 — ¿Una reunión cancelada puede reprogramarse?** Default: no; se edita solo mientras está `programada`, una cancelada queda cerrada y se crea otra.
+
+---
+
+✅ Fase 0 completada — 39 tests en verde — d3e4f5b73c6d066c63c2f7de7af49b967d0d23c0
