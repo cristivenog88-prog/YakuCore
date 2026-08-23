@@ -93,4 +93,13 @@ class User extends Authenticatable
     {
         return $this->rol === Rol::Vocal;
     }
+
+    /**
+     * Nombre de la ruta a la que se redirige a este usuario tras el login
+     * u otras acciones de autenticación (superadmin → /superadmin, resto → /panel).
+     */
+    public function rutaInicio(): string
+    {
+        return $this->esSuperadmin() ? 'superadmin.dashboard' : 'panel.dashboard';
+    }
 }

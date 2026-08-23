@@ -5,36 +5,14 @@ import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { UserMenuContent } from '@/components/user-menu-content';
 import { useInitials } from '@/hooks/use-initials';
 import { cn } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
+import { LayoutGrid, Menu, Search } from 'lucide-react';
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
-
-const mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        url: '/dashboard',
-        icon: LayoutGrid,
-    },
-];
-
-const rightNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        url: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        url: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },
-];
 
 const activeItemStyles = 'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
 
@@ -46,6 +24,14 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
     const page = usePage<SharedData>();
     const { auth } = page.props;
     const getInitials = useInitials();
+    const inicio = auth.user.rol === 'superadmin' ? '/superadmin' : '/panel';
+    const mainNavItems: NavItem[] = [
+        {
+            title: auth.user.rol === 'superadmin' ? 'Superadmin' : 'Panel',
+            url: inicio,
+            icon: LayoutGrid,
+        },
+    ];
     return (
         <>
             <div className="border-sidebar-border/80 border-b">
@@ -73,28 +59,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                 </Link>
                                             ))}
                                         </div>
-
-                                        <div className="flex flex-col space-y-4">
-                                            {rightNavItems.map((item) => (
-                                                <a
-                                                    key={item.title}
-                                                    href={item.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="flex items-center space-x-2 font-medium"
-                                                >
-                                                    {item.icon && <Icon iconNode={item.icon} className="h-5 w-5" />}
-                                                    <span>{item.title}</span>
-                                                </a>
-                                            ))}
-                                        </div>
                                     </div>
                                 </div>
                             </SheetContent>
                         </Sheet>
                     </div>
 
-                    <Link href="/dashboard" prefetch className="flex items-center space-x-2">
+                    <Link href={inicio} prefetch className="flex items-center space-x-2">
                         <AppLogo />
                     </Link>
 
@@ -129,28 +100,6 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                             <Button variant="ghost" size="icon" className="group h-9 w-9 cursor-pointer">
                                 <Search className="!size-5 opacity-80 group-hover:opacity-100" />
                             </Button>
-                            <div className="hidden lg:flex">
-                                {rightNavItems.map((item) => (
-                                    <TooltipProvider key={item.title} delayDuration={0}>
-                                        <Tooltip>
-                                            <TooltipTrigger>
-                                                <a
-                                                    href={item.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="group text-accent-foreground ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md bg-transparent p-0 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
-                                                >
-                                                    <span className="sr-only">{item.title}</span>
-                                                    {item.icon && <Icon iconNode={item.icon} className="size-5 opacity-80 group-hover:opacity-100" />}
-                                                </a>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>{item.title}</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                ))}
-                            </div>
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>

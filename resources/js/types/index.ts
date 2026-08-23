@@ -28,12 +28,16 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
+export type Rol = 'superadmin' | 'presidente' | 'tesorero' | 'vocal';
+
 export interface User {
     id: number;
     name: string;
     email: string;
     avatar?: string;
     email_verified_at: string | null;
+    rol: Rol;
+    jass_id: number | null;
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
