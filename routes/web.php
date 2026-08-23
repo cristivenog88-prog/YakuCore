@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
 use App\Http\Controllers\Panel\MedidorController;
+use App\Http\Controllers\Panel\Pagos\ConsumoDirectoController;
 use App\Http\Controllers\Panel\Pagos\ConsumoMedidorController;
 use App\Http\Controllers\Panel\Pagos\MantenimientoController;
 use App\Http\Controllers\Panel\Pagos\ReciboController;
@@ -56,6 +57,11 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
 
         Route::get('pagos/mantenimiento/crear', [MantenimientoController::class, 'create'])->name('pagos.mantenimiento.create');
         Route::post('pagos/mantenimiento', [MantenimientoController::class, 'store'])->name('pagos.mantenimiento.store');
+
+        Route::middleware('jass.sin-medidor')->group(function () {
+            Route::get('pagos/consumo-directo/crear', [ConsumoDirectoController::class, 'create'])->name('pagos.consumo-directo.create');
+            Route::post('pagos/consumo-directo', [ConsumoDirectoController::class, 'store'])->name('pagos.consumo-directo.store');
+        });
 
         Route::middleware('rol:presidente')->group(function () {
             Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');

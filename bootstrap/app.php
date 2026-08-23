@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AsegurarJassSinMedidor;
 use App\Http\Middleware\AsegurarJassTieneMedidor;
 use App\Http\Middleware\AsegurarRol;
 use App\Http\Middleware\CabecerasSeguridad;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'rol' => AsegurarRol::class,
             'jass' => ResolverJassActual::class,
             'jass.tiene-medidor' => AsegurarJassTieneMedidor::class,
+            'jass.sin-medidor' => AsegurarJassSinMedidor::class,
         ]);
 
         $middleware->web(append: [
