@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Socios\StoreSocioRequest;
 use App\Http\Requests\Socios\UpdateSocioRequest;
+use App\Models\Pago;
 use App\Models\Socio;
 use App\Services\Auditoria\RegistradorAuditoria;
 use App\Services\Tenancy\ContextoJass;
@@ -55,6 +56,10 @@ class SocioController extends Controller
             'puedeGestionar' => $request->user()->can('create', Socio::class),
             'tieneMedidor' => (bool) $jass?->tiene_medidor,
             'prefijoJass' => $jass?->prefijo,
+            'historialPagos' => Pago::where('socio_id', $socio->id)
+                ->orderByDesc('fecha_pago')
+                ->orderByDesc('id')
+                ->get(['id', 'vivienda_id', 'tipo', 'numero_recibo', 'periodo', 'concepto', 'monto', 'fecha_pago']),
         ]);
     }
 

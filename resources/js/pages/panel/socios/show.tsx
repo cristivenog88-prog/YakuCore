@@ -4,6 +4,7 @@ import TablaResponsiva, { type ColumnaTabla } from '@/components/yaku/tabla-resp
 import PanelLayout from '@/layouts/panel-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
+import HistorialPagos from './historial-pagos';
 import MedidorDialog from './medidor-dialog';
 import ReemplazarMedidorDialog from './reemplazar-medidor-dialog';
 import ViviendaDialog from './vivienda-dialog';
@@ -34,15 +35,27 @@ interface SocioProps {
     direccion: string;
 }
 
+interface PagoFila {
+    id: number;
+    vivienda_id: number;
+    tipo: string;
+    numero_recibo: number;
+    periodo: string;
+    concepto: string;
+    monto: string;
+    fecha_pago: string;
+}
+
 interface Props {
     socio: SocioProps;
     viviendas: ViviendaFila[];
     puedeGestionar: boolean;
     tieneMedidor: boolean;
     prefijoJass: string | null;
+    historialPagos: PagoFila[];
 }
 
-export default function SocioShow({ socio, viviendas, puedeGestionar, tieneMedidor, prefijoJass }: Props) {
+export default function SocioShow({ socio, viviendas, puedeGestionar, tieneMedidor, prefijoJass, historialPagos }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Panel', href: '/panel' },
         { title: 'Socios', href: '/panel/socios' },
@@ -173,6 +186,8 @@ export default function SocioShow({ socio, viviendas, puedeGestionar, tieneMedid
                         }
                     />
                 </div>
+
+                <HistorialPagos pagos={historialPagos} viviendas={viviendas.map((v) => ({ id: v.id, direccion: v.direccion }))} />
             </div>
         </PanelLayout>
     );
