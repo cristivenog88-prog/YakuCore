@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Panel\AnuncioController;
 use App\Http\Controllers\Panel\AsistenciaController;
+use App\Http\Controllers\Panel\AuditoriaController;
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
 use App\Http\Controllers\Panel\GastoController;
 use App\Http\Controllers\Panel\MedidorController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Panel\ReunionController;
 use App\Http\Controllers\Panel\SocioController;
 use App\Http\Controllers\Panel\UsuarioController;
 use App\Http\Controllers\Panel\ViviendaController;
+use App\Http\Controllers\Superadmin\DashboardController as SuperadminDashboardController;
 use App\Http\Controllers\Superadmin\JassController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -105,6 +107,8 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
             ->middleware('password.confirm')
             ->name('anuncios.destroy');
 
+        Route::get('auditoria', [AuditoriaController::class, 'index'])->name('auditoria.index');
+
         Route::middleware('rol:presidente')->group(function () {
             Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
             Route::get('usuarios/crear', [UsuarioController::class, 'create'])->name('usuarios.create');
@@ -122,9 +126,7 @@ Route::middleware(['auth', 'rol:superadmin'])
     ->prefix('superadmin')
     ->name('superadmin.')
     ->group(function () {
-        // El panel superadmin es, por ahora, el listado de JASS con botón
-        // "Supervisar" (KPIs reales en Fase 7).
-        Route::get('/', [JassController::class, 'index'])->name('dashboard');
+        Route::get('/', [SuperadminDashboardController::class, 'index'])->name('dashboard');
 
         Route::get('jass', [JassController::class, 'index'])->name('jass.index');
         Route::get('jass/crear', [JassController::class, 'create'])->name('jass.create');
@@ -162,6 +164,7 @@ Route::middleware(['auth', 'rol:superadmin', 'jass'])
         Route::get('reuniones', [ReunionController::class, 'index'])->name('reuniones.index');
         Route::get('reuniones/{reunion}', [ReunionController::class, 'show'])->name('reuniones.show');
         Route::get('anuncios', [AnuncioController::class, 'index'])->name('anuncios.index');
+        Route::get('auditoria', [AuditoriaController::class, 'index'])->name('auditoria.index');
     });
 
 require __DIR__.'/settings.php';

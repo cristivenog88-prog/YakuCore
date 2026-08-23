@@ -3,7 +3,7 @@
 use App\Models\Jass;
 use App\Models\User;
 
-test('el panel superadmin (/superadmin) muestra el listado de JASS', function () {
+test('el panel superadmin (/superadmin) muestra el dashboard con estadísticas globales', function () {
     $superadmin = User::factory()->superadmin()->create();
     $jass = Jass::factory()->create(['nombre' => 'Villa Sol']);
 
@@ -11,9 +11,10 @@ test('el panel superadmin (/superadmin) muestra el listado de JASS', function ()
 
     $response->assertOk();
     $response->assertInertia(fn ($page) => $page
-        ->component('superadmin/jass/index')
+        ->component('superadmin/dashboard')
         ->has('jass', 1)
         ->where('jass.0.nombre', 'Villa Sol')
+        ->has('totales')
     );
 });
 
