@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
             'nombre' => 'Villa Sol',
             'comunidad' => 'Villa Sol',
             'distrito' => 'Independencia',
+            'periodicidad_mantenimiento' => 'mensual',
+            'dia_vencimiento' => 15,
         ]);
 
         User::factory()->presidente($jassConMedidor)->create([
@@ -45,6 +47,8 @@ class DatabaseSeeder extends Seeder
             'nombre' => 'Los Andes',
             'comunidad' => 'Los Andes',
             'distrito' => 'Huaraz',
+            'periodicidad_mantenimiento' => 'mensual',
+            'dia_vencimiento' => 15,
         ]);
 
         User::factory()->presidente($jassSinMedidor)->create([
@@ -61,5 +65,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Vocal Los Andes',
             'email' => 'vocal.losandes@yakucore.pe',
         ]);
+
+        $this->call(DemoDataSeeder::class);
     }
 }
