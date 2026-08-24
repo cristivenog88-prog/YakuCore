@@ -92,7 +92,6 @@ export default function ConsumoMedidorCreate({ socios, medidores, previsualizaci
         }, 400);
 
         return () => clearTimeout(temporizador);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [data.medidor_id, data.lectura_actual]);
 
     const submit: FormEventHandler = (e) => {
