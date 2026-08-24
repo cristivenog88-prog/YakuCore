@@ -384,3 +384,4 @@ Ambigüedades **no** cubiertas por la sección 8 de la spec. El plan avanza con 
 ✅ Fase 6 completada — 214 tests en verde — a986057 (P10 aplicado: reunión cancelada no se reprograma, se cierra y se crea otra)
 ✅ Fase 7 completada — 223 tests en verde — 1509c17
 ✅ Fase 8 completada — 234 tests en verde — c88299b (P9 aplicado: transparencia con año en curso + selector, gastos sin foto)
+✅ Fase 9 completada — 234 tests en verde — f085c41
