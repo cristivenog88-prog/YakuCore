@@ -87,7 +87,7 @@ export default function PortalJassShow({ jass, anuncios, reuniones, anio, transp
                                 <div key={anuncio.id} className="rounded-md border p-4">
                                     <p className="font-medium">{anuncio.titulo}</p>
                                     <p className="text-muted-foreground text-xs">{anuncio.fecha_publicacion}</p>
-                                    <p className="mt-2 text-sm">{anuncio.contenido}</p>
+                                    <p className="mt-2 text-sm whitespace-pre-line">{anuncio.contenido}</p>
                                 </div>
                             ))}
                         </div>

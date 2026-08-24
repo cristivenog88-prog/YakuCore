@@ -83,8 +83,8 @@ export default function ReunionShow({ reunion, puedeGestionar, puedeTomarAsisten
                                 Fecha: {reunion.fecha} — {reunion.hora}
                             </div>
                             <div>Lugar: {reunion.lugar}</div>
-                            {reunion.descripcion && <div>Descripción: {reunion.descripcion}</div>}
-                            {reunion.puntosTratar && <div>Puntos a tratar: {reunion.puntosTratar}</div>}
+                            {reunion.descripcion && <div className="whitespace-pre-line">Descripción: {reunion.descripcion}</div>}
+                            {reunion.puntosTratar && <div className="whitespace-pre-line">Puntos a tratar: {reunion.puntosTratar}</div>}
                         </dl>
                     </div>
 
