@@ -39,6 +39,8 @@ class JassController extends Controller
 
         if (! $datos['tiene_medidor']) {
             $datos['tarifa_base_m3'] = null;
+        } else {
+            $datos['usa_poa'] = null;
         }
 
         $jass = Jass::create($datos);
@@ -65,6 +67,8 @@ class JassController extends Controller
 
         if (! $datos['tiene_medidor']) {
             $datos['tarifa_base_m3'] = null;
+        } else {
+            $datos['usa_poa'] = null;
         }
 
         $jass->update($datos);

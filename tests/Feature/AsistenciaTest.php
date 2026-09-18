@@ -9,19 +9,6 @@ use App\Models\Socio;
 use App\Models\User;
 use App\Services\Tenancy\ContextoJass;
 
-test('tomar asistencia exige confirmar la contraseña', function () {
-    $jass = Jass::factory()->create();
-    $presidente = User::factory()->presidente($jass)->create();
-    app(ContextoJass::class)->fijar($jass);
-    $reunion = Reunion::factory()->create();
-    $socio = Socio::factory()->create();
-
-    $payload = ['asistencias' => [['socio_id' => $socio->id, 'estado' => 'presente']]];
-
-    $this->actingAs($presidente)->post(route('panel.reuniones.asistencia.store', $reunion), $payload)
-        ->assertRedirect(route('password.confirm'));
-});
-
 test('al tomar asistencia se crea una fila por socio, la reunión pasa a finalizada y queda auditado', function () {
     $jass = Jass::factory()->create();
     $presidente = User::factory()->presidente($jass)->create();
@@ -29,8 +16,6 @@ test('al tomar asistencia se crea una fila por socio, la reunión pasa a finaliz
     $reunion = Reunion::factory()->create();
     $socioA = Socio::factory()->create();
     $socioB = Socio::factory()->create();
-
-    session(['auth.password_confirmed_at' => time()]);
 
     $payload = [
         'asistencias' => [
@@ -60,8 +45,6 @@ test('tomar asistencia exige cubrir a todos los socios de la JASS, ni más ni me
     Socio::factory()->create();
     Socio::factory()->create();
 
-    session(['auth.password_confirmed_at' => time()]);
-
     $unSolo = Socio::first();
     $payload = ['asistencias' => [['socio_id' => $unSolo->id, 'estado' => 'presente']]];
 
@@ -78,8 +61,6 @@ test('una reunión finalizada no admite tomar asistencia de nuevo', function () 
     app(ContextoJass::class)->fijar($jass);
     $reunion = Reunion::factory()->create(['estado' => 'finalizada']);
     $socio = Socio::factory()->create();
-
-    session(['auth.password_confirmed_at' => time()]);
 
     $payload = ['asistencias' => [['socio_id' => $socio->id, 'estado' => 'presente']]];
 

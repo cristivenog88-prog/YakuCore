@@ -10,6 +10,9 @@ use App\Models\User;
  * superadmin solo lectura (superadmin: solo-lectura en módulos operativos,
  * CLAUDE.md #8). `view` también gobierna la descarga del comprobante — el
  * controller de descarga la reutiliza (jamás una URL pública, spec §7.1).
+ * `update` además exige que no hayan pasado más de 24h desde el registro
+ * (Gasto::puedeEditarse) — pasado ese plazo el comprobante queda cerrado
+ * para evitar manipulación posterior.
  */
 class GastoPolicy
 {
@@ -38,7 +41,11 @@ class GastoPolicy
             return false;
         }
 
-        return $user->jass_id === $gasto->jass_id;
+        if ($user->jass_id !== $gasto->jass_id) {
+            return false;
+        }
+
+        return $gasto->puedeEditarse();
     }
 
     public function delete(User $user, Gasto $gasto): bool

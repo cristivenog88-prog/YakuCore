@@ -3,14 +3,18 @@
 use App\Http\Controllers\Panel\AnuncioController;
 use App\Http\Controllers\Panel\AsistenciaController;
 use App\Http\Controllers\Panel\AuditoriaController;
+use App\Http\Controllers\Panel\ConciliacionController;
 use App\Http\Controllers\Panel\DashboardController as PanelDashboardController;
 use App\Http\Controllers\Panel\GastoController;
+use App\Http\Controllers\Panel\InformeController;
 use App\Http\Controllers\Panel\MedidorController;
 use App\Http\Controllers\Panel\MorosidadController;
 use App\Http\Controllers\Panel\Pagos\ConsumoDirectoController;
 use App\Http\Controllers\Panel\Pagos\ConsumoMedidorController;
 use App\Http\Controllers\Panel\Pagos\MantenimientoController;
 use App\Http\Controllers\Panel\Pagos\ReciboController;
+use App\Http\Controllers\Panel\PoaController;
+use App\Http\Controllers\Panel\RendicionController;
 use App\Http\Controllers\Panel\ReunionController;
 use App\Http\Controllers\Panel\SocioController;
 use App\Http\Controllers\Panel\UsuarioController;
@@ -32,7 +36,7 @@ Route::get('jass/{jass}', [PortalJassController::class, 'show'])->name('portal.j
 Route::get('jass/{jass}/deuda', [ConsultaDeudaController::class, 'create'])->name('portal.deuda.create');
 Route::post('jass/{jass}/deuda', [ConsultaDeudaController::class, 'store'])->name('portal.deuda.store');
 
-Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
+Route::middleware(['auth', 'rol:presidente,tesorero,fiscal,vocal', 'jass'])
     ->prefix('panel')
     ->name('panel.')
     ->group(function () {
@@ -72,6 +76,12 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
 
         Route::get('morosidad', [MorosidadController::class, 'index'])->name('morosidad.index');
 
+        Route::get('poa', [PoaController::class, 'index'])->name('poa.index');
+        Route::get('poa/crear', [PoaController::class, 'create'])->name('poa.create');
+        Route::post('poa', [PoaController::class, 'store'])->name('poa.store');
+        Route::get('poa/editar', [PoaController::class, 'edit'])->name('poa.edit');
+        Route::put('poa', [PoaController::class, 'update'])->name('poa.update');
+
         Route::get('pagos/mantenimiento/crear', [MantenimientoController::class, 'create'])->name('pagos.mantenimiento.create');
         Route::post('pagos/mantenimiento', [MantenimientoController::class, 'store'])->name('pagos.mantenimiento.store');
 
@@ -102,7 +112,6 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
         Route::get('reuniones/{reunion}/asistencia', [AsistenciaController::class, 'create'])->name('reuniones.asistencia.create');
 
         Route::post('reuniones/{reunion}/asistencia', [AsistenciaController::class, 'store'])
-            ->middleware('password.confirm')
             ->name('reuniones.asistencia.store');
 
         Route::get('anuncios', [AnuncioController::class, 'index'])->name('anuncios.index');
@@ -116,6 +125,26 @@ Route::middleware(['auth', 'rol:presidente,tesorero,vocal', 'jass'])
             ->name('anuncios.destroy');
 
         Route::get('auditoria', [AuditoriaController::class, 'index'])->name('auditoria.index');
+
+        Route::get('conciliaciones', [ConciliacionController::class, 'index'])->name('conciliaciones.index');
+        Route::get('conciliaciones/{conciliacion}', [ConciliacionController::class, 'show'])->name('conciliaciones.show');
+        Route::post('conciliaciones', [ConciliacionController::class, 'store'])->name('conciliaciones.store');
+        Route::post('conciliaciones/{conciliacion}/firma-tesorero', [ConciliacionController::class, 'firmarTesorero'])
+            ->name('conciliaciones.firma-tesorero');
+        Route::post('conciliaciones/{conciliacion}/firma-fiscal', [ConciliacionController::class, 'firmarFiscal'])
+            ->name('conciliaciones.firma-fiscal');
+
+        Route::get('rendiciones', [RendicionController::class, 'index'])->name('rendiciones.index');
+        Route::get('rendiciones/{rendicion}', [RendicionController::class, 'show'])->name('rendiciones.show');
+        Route::post('rendiciones', [RendicionController::class, 'store'])->name('rendiciones.store');
+        Route::put('rendiciones/{rendicion}/borrador', [RendicionController::class, 'updateBorrador'])
+            ->name('rendiciones.update-borrador');
+        Route::post('rendiciones/{rendicion}/aprobar', [RendicionController::class, 'aprobar'])
+            ->name('rendiciones.aprobar');
+
+        Route::get('informes', [InformeController::class, 'index'])->name('informes.index');
+        Route::post('informes/{rendicion}', [InformeController::class, 'store'])->name('informes.store');
+        Route::get('informes/{informe}/descargar', [InformeController::class, 'descargar'])->name('informes.descargar');
 
         Route::middleware('rol:presidente')->group(function () {
             Route::get('usuarios', [UsuarioController::class, 'index'])->name('usuarios.index');
@@ -167,6 +196,7 @@ Route::middleware(['auth', 'rol:superadmin', 'jass'])
         Route::get('socios', [SocioController::class, 'index'])->name('socios.index');
         Route::get('socios/{socio}', [SocioController::class, 'show'])->name('socios.show');
         Route::get('morosidad', [MorosidadController::class, 'index'])->name('morosidad.index');
+        Route::get('poa', [PoaController::class, 'index'])->name('poa.index');
         Route::get('gastos', [GastoController::class, 'index'])->name('gastos.index');
         Route::get('gastos/{gasto}/comprobante', [GastoController::class, 'comprobante'])->name('gastos.comprobante');
         Route::get('reuniones', [ReunionController::class, 'index'])->name('reuniones.index');

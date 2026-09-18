@@ -21,7 +21,15 @@ class AnuncioController extends Controller
         $this->authorize('viewAny', Anuncio::class);
 
         $anuncios = Anuncio::orderByDesc('fecha_publicacion')
-            ->get(['id', 'titulo', 'contenido', 'fecha_publicacion', 'estado']);
+            ->get(['id', 'uuid', 'titulo', 'contenido', 'fecha_publicacion', 'estado'])
+            ->map(fn (Anuncio $anuncio) => [
+                'id' => $anuncio->id,
+                'uuid' => $anuncio->uuid,
+                'titulo' => $anuncio->titulo,
+                'contenido' => $anuncio->contenido,
+                'fecha_publicacion' => $anuncio->fecha_publicacion->toDateString(),
+                'estado' => $anuncio->estado->value,
+            ]);
 
         return Inertia::render('panel/anuncios/index', [
             'anuncios' => $anuncios,
@@ -57,6 +65,7 @@ class AnuncioController extends Controller
         return Inertia::render('panel/anuncios/edit', [
             'anuncio' => [
                 'id' => $anuncio->id,
+                'uuid' => $anuncio->uuid,
                 'titulo' => $anuncio->titulo,
                 'contenido' => $anuncio->contenido,
                 'fecha_publicacion' => $anuncio->fecha_publicacion->toDateString(),

@@ -16,7 +16,7 @@ interface EntidadNombre {
 
 interface PagoProps {
     id: number;
-    numero_recibo: number;
+    codigoRecibo: string;
     tipo: string;
     periodo: string;
     concepto: string;
@@ -43,7 +43,7 @@ export default function ReciboShow({ pago }: Props) {
 
     return (
         <>
-            <Head title={`Recibo N° ${pago.numero_recibo}`} />
+            <Head title={`Recibo ${pago.codigoRecibo}`} />
             <div className="bg-background text-foreground mx-auto flex min-h-screen max-w-2xl flex-col gap-6 p-6 print:p-0">
                 <div className="flex items-center justify-between print:hidden">
                     <Link href={route('panel.dashboard')} className="text-muted-foreground text-sm hover:underline">
@@ -62,11 +62,11 @@ export default function ReciboShow({ pago }: Props) {
                         </div>
                         <div className="text-right">
                             <p className="text-muted-foreground text-xs uppercase">Recibo</p>
-                            <p className="font-mono text-xl">N° {pago.numero_recibo}</p>
+                            <p className="font-mono text-xl">{pago.codigoRecibo}</p>
                         </div>
                     </header>
 
-                    <dl className="grid grid-cols-2 gap-x-6 gap-y-4 py-6 text-sm">
+                    <dl className="grid grid-cols-1 gap-x-6 gap-y-4 py-6 text-sm sm:grid-cols-2 print:grid-cols-2">
                         <div>
                             <dt className="text-muted-foreground text-xs">Socio</dt>
                             <dd>
@@ -106,7 +106,7 @@ export default function ReciboShow({ pago }: Props) {
                     </dl>
 
                     {consumo !== null && (
-                        <div className="grid grid-cols-3 gap-4 border-t pt-4 font-mono text-sm">
+                        <div className="grid grid-cols-1 gap-4 border-t pt-4 font-mono text-sm sm:grid-cols-3 print:grid-cols-3">
                             <div>
                                 <dt className="text-muted-foreground text-xs">Lectura anterior</dt>
                                 <dd>{pago.lectura_anterior}</dd>

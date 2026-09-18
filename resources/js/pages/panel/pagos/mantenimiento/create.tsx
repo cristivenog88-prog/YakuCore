@@ -25,6 +25,8 @@ interface ViviendaOpcion {
 interface Props {
     socios: SocioOpcion[];
     viviendas: ViviendaOpcion[];
+    usaPoa: boolean;
+    cuotaMensual: number | null;
 }
 
 interface FormData {
@@ -52,7 +54,7 @@ function leerPrecarga() {
     };
 }
 
-export default function MantenimientoCreate({ socios, viviendas }: Props) {
+export default function MantenimientoCreate({ socios, viviendas, usaPoa, cuotaMensual }: Props) {
     const precarga = useMemo(leerPrecarga, []);
     const { data, setData, post, processing, errors } = useForm<FormData>({
         socio_id: precarga.socio_id,
@@ -125,19 +127,36 @@ export default function MantenimientoCreate({ socios, viviendas }: Props) {
                         <InputError message={errors.periodo} />
                     </div>
 
-                    <div className="grid gap-2">
-                        <Label htmlFor="monto">Monto (S/)</Label>
-                        <Input
-                            id="monto"
-                            type="number"
-                            step="0.01"
-                            min="0.01"
-                            value={data.monto}
-                            onChange={(e) => setData('monto', e.target.value)}
-                            required
-                        />
-                        <InputError message={errors.monto} />
-                    </div>
+                    {usaPoa ? (
+                        <div className="grid gap-2">
+                            <Label>Monto (S/)</Label>
+                            <Input value={cuotaMensual !== null ? cuotaMensual.toFixed(2) : '—'} readOnly disabled className="font-mono" />
+                            <p className="text-muted-foreground text-xs">
+                                Cuota calculada por el servidor desde el POA vigente: no se ingresa a mano.
+                            </p>
+                            {cuotaMensual === null && (
+                                <p className="text-destructive text-sm">
+                                    Esta JASS usa POA pero todavía no tiene uno elaborado para este año, o no hay socios registrados.
+                                    Completa el POA antes de cobrar.
+                                </p>
+                            )}
+                            <InputError message={errors.monto} />
+                        </div>
+                    ) : (
+                        <div className="grid gap-2">
+                            <Label htmlFor="monto">Monto (S/)</Label>
+                            <Input
+                                id="monto"
+                                type="number"
+                                step="0.01"
+                                min="0.01"
+                                value={data.monto}
+                                onChange={(e) => setData('monto', e.target.value)}
+                                required
+                            />
+                            <InputError message={errors.monto} />
+                        </div>
+                    )}
 
                     <div className="grid gap-2">
                         <Label htmlFor="fecha_pago">Fecha de pago</Label>
@@ -151,7 +170,7 @@ export default function MantenimientoCreate({ socios, viviendas }: Props) {
                         <InputError message={errors.fecha_pago} />
                     </div>
 
-                    <Button type="submit" disabled={processing} className="w-fit">
+                    <Button type="submit" disabled={processing || (usaPoa && cuotaMensual === null)} className="w-fit">
                         {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                         Registrar cobro
                     </Button>

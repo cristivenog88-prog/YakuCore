@@ -32,11 +32,11 @@ class UsuarioController extends Controller
         $jassObjetivo = $this->resolverJass($request, $jass);
 
         return Inertia::render('panel/usuarios/index', [
-            'jass' => $jassObjetivo->only(['id', 'nombre']),
+            'jass' => $jassObjetivo->only(['id', 'uuid', 'nombre']),
             'esSuperadmin' => $request->user()->esSuperadmin(),
             'usuarios' => User::where('jass_id', $jassObjetivo->id)
                 ->orderBy('name')
-                ->get(['id', 'name', 'email', 'rol']),
+                ->get(['id', 'uuid', 'name', 'email', 'rol']),
         ]);
     }
 
@@ -47,7 +47,7 @@ class UsuarioController extends Controller
         $jassObjetivo = $this->resolverJass($request, $jass);
 
         return Inertia::render('panel/usuarios/create', [
-            'jass' => $jassObjetivo->only(['id', 'nombre']),
+            'jass' => $jassObjetivo->only(['id', 'uuid', 'nombre']),
             'esSuperadmin' => $request->user()->esSuperadmin(),
         ]);
     }
@@ -80,9 +80,9 @@ class UsuarioController extends Controller
         $jassObjetivo = $this->resolverJass($request, $jass);
 
         return Inertia::render('panel/usuarios/edit', [
-            'jass' => $jassObjetivo->only(['id', 'nombre']),
+            'jass' => $jassObjetivo->only(['id', 'uuid', 'nombre']),
             'esSuperadmin' => $request->user()->esSuperadmin(),
-            'usuario' => $usuario->only(['id', 'name', 'email', 'rol']),
+            'usuario' => $usuario->only(['id', 'uuid', 'name', 'email', 'rol']),
         ]);
     }
 

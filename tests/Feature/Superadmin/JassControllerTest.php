@@ -29,6 +29,7 @@ function datosJassValidos(array $sobrescribir = []): array
         'comunidad' => 'Comunidad X',
         'distrito' => 'Distrito X',
         'tiene_medidor' => true,
+        'usa_poa' => false,
         'tarifa_base_m3' => '2.50',
         'periodicidad_mantenimiento' => Periodicidad::Mensual->value,
         'dia_vencimiento' => 15,
@@ -81,6 +82,45 @@ test('tarifa_base_m3 se guarda como null si tiene_medidor es false', function ()
 
     $jass = Jass::where('nombre', 'Sin Medidor')->firstOrFail();
     expect($jass->tarifa_base_m3)->toBeNull();
+});
+
+test('usa_poa es obligatorio si tiene_medidor es false', function () {
+    $superadmin = User::factory()->superadmin()->create();
+
+    $response = $this->actingAs($superadmin)->post(route('superadmin.jass.store'), datosJassValidos([
+        'tiene_medidor' => false,
+        'usa_poa' => null,
+        'tarifa_base_m3' => null,
+    ]));
+
+    $response->assertSessionHasErrors('usa_poa');
+});
+
+test('usa_poa se guarda como null si tiene_medidor es true', function () {
+    $superadmin = User::factory()->superadmin()->create();
+
+    $this->actingAs($superadmin)->post(route('superadmin.jass.store'), datosJassValidos([
+        'nombre' => 'Con Medidor',
+        'tiene_medidor' => true,
+        'usa_poa' => true,
+    ]));
+
+    $jass = Jass::where('nombre', 'Con Medidor')->firstOrFail();
+    expect($jass->usa_poa)->toBeNull();
+});
+
+test('una JASS sin medidor puede activar usa_poa', function () {
+    $superadmin = User::factory()->superadmin()->create();
+
+    $this->actingAs($superadmin)->post(route('superadmin.jass.store'), datosJassValidos([
+        'nombre' => 'Usa POA',
+        'tiene_medidor' => false,
+        'usa_poa' => true,
+        'tarifa_base_m3' => null,
+    ]));
+
+    $jass = Jass::where('nombre', 'Usa POA')->firstOrFail();
+    expect($jass->usa_poa)->toBeTrue();
 });
 
 test('el nombre de la JASS debe ser único', function () {

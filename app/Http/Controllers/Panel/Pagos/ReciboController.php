@@ -23,14 +23,26 @@ class ReciboController extends Controller
             'vivienda:id,direccion',
             'medidor:id,codigo',
             'usuario:id,name',
-            'jass:id,nombre,comunidad,distrito',
+            'jass:id,nombre,comunidad,distrito,prefijo',
         ]);
 
         return Inertia::render('panel/recibos/show', [
-            'pago' => $pago->only([
-                'id', 'numero_recibo', 'tipo', 'periodo', 'concepto', 'lectura_anterior',
-                'lectura_actual', 'monto', 'fecha_pago', 'socio', 'vivienda', 'medidor', 'usuario', 'jass',
-            ]),
+            'pago' => [
+                'id' => $pago->id,
+                'codigoRecibo' => Pago::formatearCodigo($pago->jass->prefijo, $pago->numero_recibo),
+                'tipo' => $pago->tipo->value,
+                'periodo' => $pago->periodo,
+                'concepto' => $pago->concepto,
+                'lectura_anterior' => $pago->lectura_anterior,
+                'lectura_actual' => $pago->lectura_actual,
+                'monto' => $pago->monto,
+                'fecha_pago' => $pago->fecha_pago->toDateString(),
+                'socio' => $pago->socio,
+                'vivienda' => $pago->vivienda,
+                'medidor' => $pago->medidor,
+                'usuario' => $pago->usuario,
+                'jass' => $pago->jass->only(['id', 'nombre', 'comunidad', 'distrito']),
+            ],
         ]);
     }
 }

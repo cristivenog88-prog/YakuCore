@@ -3,6 +3,7 @@
 use App\Models\Jass;
 use App\Services\Pagos\GeneradorNumeroRecibo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Symfony\Component\Process\Process;
 
 /**
@@ -85,6 +86,7 @@ test('el correlativo no se duplica ante dos altas realmente concurrentes (MySQL)
     configurarConexionMysqlReal();
 
     $jassId = DB::connection('mysql_real')->table('jass')->insertGetId([
+        'uuid' => (string) Str::uuid(),
         'nombre' => 'Concurrencia '.uniqid(),
         'prefijo' => 'JASSConcurrencia'.uniqid(),
         'comunidad' => 'X',

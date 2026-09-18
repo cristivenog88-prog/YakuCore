@@ -28,12 +28,14 @@ interface Props {
 
 const rolesPresidente = [
     { value: 'tesorero', label: 'Tesorero' },
+    { value: 'fiscal', label: 'Fiscal' },
     { value: 'vocal', label: 'Vocal' },
 ];
 
 const rolesSuperadmin = [
     { value: 'presidente', label: 'Presidente' },
     { value: 'tesorero', label: 'Tesorero' },
+    { value: 'fiscal', label: 'Fiscal' },
     { value: 'vocal', label: 'Vocal' },
     { value: 'superadmin', label: 'Superadmin' },
 ];

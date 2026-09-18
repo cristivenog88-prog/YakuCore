@@ -5,7 +5,7 @@ import { FormEventHandler } from 'react';
 import UsuarioForm, { type UsuarioFormData } from './usuario-form';
 
 interface Props {
-    jass: { id: number; nombre: string };
+    jass: { id: number; uuid: string; nombre: string };
     esSuperadmin: boolean;
 }
 
@@ -18,14 +18,14 @@ export default function UsuarioCreate({ jass, esSuperadmin }: Props) {
         rol: esSuperadmin ? '' : 'tesorero',
     });
 
-    const rutaIndice = esSuperadmin ? route('superadmin.jass.usuarios.index', jass.id) : route('panel.usuarios.index');
-    const rutaStore = esSuperadmin ? route('superadmin.jass.usuarios.store', jass.id) : route('panel.usuarios.store');
+    const rutaIndice = esSuperadmin ? route('superadmin.jass.usuarios.index', jass.uuid) : route('panel.usuarios.index');
+    const rutaStore = esSuperadmin ? route('superadmin.jass.usuarios.store', jass.uuid) : route('panel.usuarios.store');
 
     const breadcrumbs: BreadcrumbItem[] = esSuperadmin
         ? [
               { title: 'Superadmin', href: '/superadmin' },
               { title: 'JASS', href: '/superadmin/jass' },
-              { title: jass.nombre, href: route('superadmin.jass.edit', jass.id) },
+              { title: jass.nombre, href: route('superadmin.jass.edit', jass.uuid) },
               { title: 'Usuarios', href: rutaIndice },
               { title: 'Nuevo', href: '#' },
           ]

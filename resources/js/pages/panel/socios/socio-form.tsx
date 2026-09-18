@@ -26,7 +26,7 @@ interface Props {
 export default function SocioForm({ data, setData, errors, processing, onSubmit, textoBoton }: Props) {
     return (
         <form onSubmit={onSubmit} className="flex max-w-xl flex-col gap-6">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
                     <Label htmlFor="nombres">Nombres</Label>
                     <Input id="nombres" value={data.nombres} onChange={(e) => setData('nombres', e.target.value)} required />

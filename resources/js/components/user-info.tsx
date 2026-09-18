@@ -1,4 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import BadgeRol from '@/components/yaku/badge-rol';
 import { useInitials } from '@/hooks/use-initials';
 import { type User } from '@/types';
 
@@ -13,9 +14,10 @@ export function UserInfo({ user, showEmail = false }: { user: User; showEmail?: 
                     {getInitials(user.name)}
                 </AvatarFallback>
             </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
+            <div className="grid flex-1 gap-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
                 {showEmail && <span className="text-muted-foreground truncate text-xs">{user.email}</span>}
+                {showEmail && <BadgeRol rol={user.rol} className="w-fit" />}
             </div>
         </>
     );

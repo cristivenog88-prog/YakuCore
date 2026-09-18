@@ -111,7 +111,7 @@ test('presidente no puede editar ni eliminar socios de otra JASS', function () {
     app(ContextoJass::class)->fijar($jassB);
     $socioB = Socio::factory()->create();
 
-    $this->actingAs($presidenteA)->get(route('panel.socios.edit', $socioB))->assertForbidden();
+    $this->actingAs($presidenteA)->get(route('panel.socios.edit', $socioB))->assertNotFound();
 });
 
 test('superadmin puede supervisar y ver socios de cualquier JASS de solo lectura', function () {

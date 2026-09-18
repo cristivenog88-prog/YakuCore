@@ -28,7 +28,7 @@ class ResolverJassActual
         // el valor crudo (string/int) sin bindear.
         $jassId = match (true) {
             $jassDeRuta instanceof Jass => $jassDeRuta->id,
-            $jassDeRuta !== null => Jass::findOrFail($jassDeRuta)->id,
+            $jassDeRuta !== null => Jass::where('uuid', $jassDeRuta)->firstOrFail()->id,
             default => $request->user()?->jass_id,
         };
 

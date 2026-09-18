@@ -49,7 +49,11 @@ export default function TablaResponsiva<T>({ columnas, filas, obtenerLlave, acci
                                         {columna.render(fila)}
                                     </td>
                                 ))}
-                                {acciones && <td className="px-4 py-2">{acciones(fila)}</td>}
+                                {acciones && (
+                                    <td className="px-4 py-2">
+                                        <div className="flex flex-wrap gap-2">{acciones(fila)}</div>
+                                    </td>
+                                )}
                             </tr>
                         ))}
                     </tbody>
@@ -67,7 +71,7 @@ export default function TablaResponsiva<T>({ columnas, filas, obtenerLlave, acci
                                 </div>
                             ))}
                         </dl>
-                        {acciones && <div className="mt-3 flex gap-2">{acciones(fila)}</div>}
+                        {acciones && <div className="mt-3 flex flex-wrap gap-2">{acciones(fila)}</div>}
                     </div>
                 ))}
             </div>

@@ -8,6 +8,7 @@ import { FormEventHandler, useState } from 'react';
 
 interface SocioFila {
     id: number;
+    uuid: string;
     nombres: string;
     apellidos: string;
     dni: string;
@@ -45,7 +46,7 @@ export default function SociosIndex({ socios, busqueda, puedeGestionar }: Props)
             return;
         }
 
-        router.delete(route('panel.socios.destroy', fila.id));
+        router.delete(route('panel.socios.destroy', fila.uuid));
     };
 
     return (
@@ -80,7 +81,7 @@ export default function SociosIndex({ socios, busqueda, puedeGestionar }: Props)
                     acciones={(fila) => (
                         <>
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={route('panel.socios.show', fila.id)}>Ver ficha</Link>
+                                <Link href={route('panel.socios.show', fila.uuid)}>Ver ficha</Link>
                             </Button>
                             {puedeGestionar && (
                                 <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>

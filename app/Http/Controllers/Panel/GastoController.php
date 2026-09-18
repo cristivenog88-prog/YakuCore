@@ -33,7 +33,7 @@ class GastoController extends Controller
         $gastos = Gasto::whereYear('created_at', $anio)
             ->with('usuario:id,name')
             ->orderByDesc('created_at')
-            ->get(['id', 'usuario_id', 'descripcion', 'monto', 'tipo_comprobante', 'foto_path', 'created_at']);
+            ->get(['id', 'uuid', 'jass_id', 'usuario_id', 'descripcion', 'proveedor', 'fecha_compra', 'monto', 'tipo_comprobante', 'foto_path', 'created_at']);
 
         $totalesPorMes = $gastos
             ->groupBy(fn (Gasto $gasto) => $gasto->created_at->format('Y-m'))
@@ -44,12 +44,16 @@ class GastoController extends Controller
         return Inertia::render('panel/gastos/index', [
             'gastos' => $gastos->map(fn (Gasto $gasto) => [
                 'id' => $gasto->id,
+                'uuid' => $gasto->uuid,
                 'descripcion' => $gasto->descripcion,
+                'proveedor' => $gasto->proveedor,
+                'fechaCompra' => $gasto->fecha_compra?->toDateString(),
                 'monto' => (float) $gasto->monto,
                 'tipoComprobante' => $gasto->tipo_comprobante->value,
                 'tieneFoto' => $gasto->foto_path !== null,
                 'usuario' => $gasto->usuario->name,
                 'fecha' => $gasto->created_at->toDateString(),
+                'puedeEditar' => $request->user()->can('update', $gasto),
             ]),
             'totalesPorMes' => $totalesPorMes,
             'totalAnio' => array_sum($totalesPorMes),
@@ -77,6 +81,8 @@ class GastoController extends Controller
         $gasto = Gasto::create([
             'usuario_id' => Auth::id(),
             'descripcion' => $datos['descripcion'],
+            'proveedor' => $datos['proveedor'],
+            'fecha_compra' => $datos['fecha_compra'],
             'monto' => $datos['monto'],
             'tipo_comprobante' => $datos['tipo_comprobante'],
             'foto_path' => $fotoPath,
@@ -94,7 +100,10 @@ class GastoController extends Controller
         return Inertia::render('panel/gastos/edit', [
             'gasto' => [
                 'id' => $gasto->id,
+                'uuid' => $gasto->uuid,
                 'descripcion' => $gasto->descripcion,
+                'proveedor' => $gasto->proveedor,
+                'fechaCompra' => $gasto->fecha_compra?->toDateString(),
                 'monto' => (float) $gasto->monto,
                 'tipoComprobante' => $gasto->tipo_comprobante->value,
                 'tieneFoto' => $gasto->foto_path !== null,
@@ -109,6 +118,8 @@ class GastoController extends Controller
         $datos = $request->validated();
 
         $gasto->descripcion = $datos['descripcion'];
+        $gasto->proveedor = $datos['proveedor'];
+        $gasto->fecha_compra = $datos['fecha_compra'];
         $gasto->monto = $datos['monto'];
         $gasto->tipo_comprobante = $datos['tipo_comprobante'];
 

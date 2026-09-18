@@ -42,7 +42,7 @@ test('la página pública de una JASS solo muestra anuncios visibles y reuniones
     Reunion::factory()->create(['titulo' => 'Asamblea próxima', 'estado' => 'programada']);
     Reunion::factory()->create(['titulo' => 'Asamblea pasada', 'estado' => 'finalizada']);
 
-    $response = $this->get(route('portal.jass.show', $jass->id));
+    $response = $this->get(route('portal.jass.show', $jass));
 
     $response->assertOk();
     $response->assertInertia(fn ($page) => $page
@@ -73,7 +73,7 @@ test('la transparencia pública de una JASS no mezcla datos de otra JASS', funct
     $this->actingAs($presidenteB);
     app(RegistradorPago::class)->mantenimiento($socioB, $viviendaB, '2026-03', 999, '2026-03-10');
 
-    $response = $this->get(route('portal.jass.show', ['jass' => $jassA->id, 'anio' => 2026]));
+    $response = $this->get(route('portal.jass.show', ['jass' => $jassA, 'anio' => 2026]));
 
     $response->assertInertia(fn ($page) => $page
         ->where('transparencia.recaudadoMantenimiento', 40)
@@ -89,7 +89,7 @@ test('el buscador de deuda no expone teléfono ni dirección', function () {
     $socio = Socio::factory()->create(['dni' => '87654321', 'telefono' => '999888777', 'direccion' => 'Jr. Secreto 123']);
     Vivienda::factory()->create(['socio_id' => $socio->id]);
 
-    $response = $this->post(route('portal.deuda.store', $jass->id), ['dni' => '87654321']);
+    $response = $this->post(route('portal.deuda.store', $jass), ['dni' => '87654321']);
 
     $response->assertSessionHas('resultado');
     $resultado = collect(session('resultado'));

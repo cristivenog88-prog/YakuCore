@@ -6,13 +6,14 @@ import UsuarioForm, { type UsuarioFormData } from './usuario-form';
 
 interface UsuarioProps {
     id: number;
+    uuid: string;
     name: string;
     email: string;
     rol: string;
 }
 
 interface Props {
-    jass: { id: number; nombre: string };
+    jass: { id: number; uuid: string; nombre: string };
     usuario: UsuarioProps;
     esSuperadmin: boolean;
 }
@@ -26,16 +27,16 @@ export default function UsuarioEdit({ jass, usuario, esSuperadmin }: Props) {
         rol: usuario.rol,
     });
 
-    const rutaIndice = esSuperadmin ? route('superadmin.jass.usuarios.index', jass.id) : route('panel.usuarios.index');
+    const rutaIndice = esSuperadmin ? route('superadmin.jass.usuarios.index', jass.uuid) : route('panel.usuarios.index');
     const rutaUpdate = esSuperadmin
-        ? route('superadmin.jass.usuarios.update', [jass.id, usuario.id])
-        : route('panel.usuarios.update', usuario.id);
+        ? route('superadmin.jass.usuarios.update', [jass.uuid, usuario.uuid])
+        : route('panel.usuarios.update', usuario.uuid);
 
     const breadcrumbs: BreadcrumbItem[] = esSuperadmin
         ? [
               { title: 'Superadmin', href: '/superadmin' },
               { title: 'JASS', href: '/superadmin/jass' },
-              { title: jass.nombre, href: route('superadmin.jass.edit', jass.id) },
+              { title: jass.nombre, href: route('superadmin.jass.edit', jass.uuid) },
               { title: 'Usuarios', href: rutaIndice },
               { title: 'Editar', href: '#' },
           ]

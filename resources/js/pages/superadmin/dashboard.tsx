@@ -6,6 +6,7 @@ import { Head, Link } from '@inertiajs/react';
 
 interface JassFila {
     id: number;
+    uuid: string;
     nombre: string;
     socios: number;
     recaudacionAnio: number;
@@ -59,7 +60,7 @@ export default function SuperadminDashboard({ jass, totales }: Props) {
                     vacio="Todavía no hay JASS registradas."
                     acciones={(fila) => (
                         <Button variant="outline" size="sm" asChild>
-                            <Link href={route('supervision.dashboard', fila.id)}>Supervisar</Link>
+                            <Link href={route('supervision.dashboard', fila.uuid)}>Supervisar</Link>
                         </Button>
                     )}
                 />

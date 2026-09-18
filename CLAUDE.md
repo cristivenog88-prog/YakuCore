@@ -3,36 +3,54 @@
 Sistema de gestión multi-tenant para JASS (juntas de agua) de Huaraz. Cada JASS es un tenant; el scoping por `jass_id` es la regla de seguridad más importante del proyecto.
 
 ## Documentos de referencia (leer antes de programar)
-- `PLAN-YAKUCORE.md` — plan por fases. Se ejecuta **una fase a la vez, en orden**.
-- `YakuCore-Spec-para-Fable5.md` — spec funcional. Las decisiones de negocio están en su sección 8; cítalas por número.
+- `docs/PLAN-YAKUCORE.md` — plan por fases. Se ejecuta **una fase a la vez, en orden**.
+- `docs/YakuCore-Spec-para-Fable5.md` — spec funcional. Las decisiones de negocio están en su sección 8; cítalas por número.
 - `docs/design-system.md` — sistema de diseño (existe desde la Fase 1.5). Toda UI lo sigue.
 
 ## Stack (fijo — no proponer alternativas)
-Laravel 12 · PHP 8.2 · MySQL en puerto **3307**, BD `BDyakucore` · Pest · Inertia v2 · React 19 + TypeScript · Tailwind v4 · shadcn/ui · Vite. Sin Redux/Zustand.
+Laravel 12 · PHP 8.2 · MySQL en puerto **3306** (XAMPP default), BD `BDyakucore` · Pest · Inertia v2 · React 19 + TypeScript · Tailwind v4 · shadcn/ui · Vite · pnpm. Sin Redux/Zustand. PDF vía `barryvdh/laravel-dompdf` (solo para el Informe de Gestión Financiera).
 
 ## Comandos
 - `composer test` → suite Pest (obligatorio en verde antes de cerrar cualquier fase o tarea)
-- `composer lint` → Pint
-- `npm run dev` / `npm run build`
+- `composer lint` → Pint (o `vendor/bin/pint --dirty --format agent` para solo lo modificado)
+- `pnpm run dev` / `pnpm run build` (nunca `npm`/`yarn` — `packageManager` bloquea otros)
+- `composer run dev` → arranca `php artisan serve` + `queue:listen` + `pnpm run dev` en paralelo
+- `php artisan test --compact --filter=NombreTest` → un solo test
+
+## Roles del sistema (App\Enums\Rol)
+`superadmin`, `presidente`, `tesorero`, **`fiscal`**, `vocal`. El rol Fiscal es indispensable para la doble firma de la Conciliación mensual y para el "informe del fiscal" del checklist de Rendición trimestral.
+
+## Módulos implementados
+**Fase 1–3 (operación diaria):** JASS · Usuarios · Socios · Viviendas · Medidores · Pagos (mantenimiento / consumo por medidor / consumo directo) · Gastos · POA · Morosidad · Reuniones · Asistencia · Anuncios · Auditoría · Consulta pública de deuda.
+
+**Fase 4 (rendición formal SUNASS/VIVIENDA):**
+- **Conciliación mensual** (`/panel/conciliaciones`) — compara pagos vs. gastos vs. fondos verificados; doble firma Tesorero + Fiscal; tolerancia `< 0.01`. Nadie puede modificar una conciliación cerrada.
+- **Rendición trimestral** (`/panel/rendiciones`) — consolida ingresos/egresos del trimestre, ejecución por categoría de POA (5 categorías); exige checklist documental completo + fecha de asamblea + N.° de acta antes de aprobar; solo Presidente aprueba.
+- **Informe de Gestión Financiera** (`/panel/informes`) — PDF `INFORME N.° NNNN-YYYY-JASS` (correlativo por año y JASS, reinicia en enero) generado desde una Rendición aprobada. Se guarda en `storage/app/informes/{jass_id}/`.
+- **Cuota familiar SUNASS** (`App\Services\Poa\CalculadoraCuota::cuotaMensualSunass`) — fórmula RCD N.° 028-2018-SUNASS-CD: `CF = PA / [12 × (1 − FIP) × (NA − NE)]`, con `ROUNDUP(·, 1)`. Convive con el `cuotaMensual()` simplificado (guía POA base).
 
 ## Reglas duras
 1. **Tenancy:** todo modelo de negocio usa el trait `PerteneceAJass` (scope global + asignación de `jass_id`). Jamás aceptar `jass_id` desde el request. Toda ruta nueva necesita test de scoping cruzado entre dos JASS.
-2. **Dinero y lecturas:** montos, correlativos de recibo y validación de lecturas se calculan SOLO en servidor (`Services/Pagos`), dentro de transacción. El frontend nunca es fuente de verdad.
+2. **Dinero y lecturas:** montos, correlativos de recibo y validación de lecturas se calculan SOLO en servidor (`Services/Pagos`, `Services/Conciliacion`, `Services/Rendicion`, `Services/Informe`), dentro de transacción. El frontend nunca es fuente de verdad.
 3. **Migraciones:** nunca editar una migración ya ejecutada; crear una nueva.
-4. **Inmutables:** `asistencias`, `auditoria` y `pagos` no tienen rutas de update/delete. No crearlas.
+4. **Inmutables:** `asistencias`, `auditoria` y `pagos` no tienen rutas de update/delete. Las **conciliaciones cerradas** (ambas firmas) y las **rendiciones aprobadas** también son de solo-lectura — cualquier cambio requiere una nueva. **Informes** son snapshots PDF, no se editan ni eliminan.
 5. **Idioma:** toda cadena visible por el usuario (UI, validaciones, errores) en español. Nada en inglés llega al usuario.
-6. **Seguridad:** prohibido `dangerouslySetInnerHTML`, `{!! !!}` y `DB::raw` con variables. Uploads solo con `File::types()->max()`. Archivos sensibles en `storage/app/private`, servidos por controller con `authorize`.
-7. **UI:** prohibidos gradientes decorativos, emojis, neón y copy genérico de SaaS. Paleta y tipografías: las de `docs/design-system.md`. Iconos: Lucide. Tablas densas: componente `TablaResponsiva` (tabla en desktop, tarjetas en móvil).
-8. **Autorización:** cada modelo tiene Policy; los controllers siempre llaman `authorize`. Superadmin es solo-lectura en módulos operativos (supervisión).
-9. **Auditoría:** toda mutación de negocio pasa por `RegistradorAuditoria` (nunca escribir el modelo `Auditoria` directo).
-10. **Ambigüedad:** si algo no está resuelto en la spec §8 ni en la sección 7 del plan, detente y pregunta. No inventes reglas de negocio.
+6. **Seguridad:** prohibido `dangerouslySetInnerHTML`, `{!! !!}` y `DB::raw` con variables. Uploads solo con `File::types()->max()`. Archivos sensibles en `storage/app/private` (incluye PDFs de informes y comprobantes de gastos), servidos por controller con `authorize`.
+7. **UI:** prohibidos gradientes decorativos, emojis, neón y copy genérico de SaaS. Paleta y tipografías: las de `docs/design-system.md`. Iconos: Lucide. Tablas densas: componente `TablaResponsiva` (tabla en desktop, tarjetas en móvil). Colores por rol vía `BadgeRol` (Fiscal = violeta `#4a2b7a`).
+8. **Autorización:** cada modelo tiene Policy; los controllers siempre llaman `authorize`. Superadmin es solo-lectura en módulos operativos (supervisión). Fiscal es solo-firma en Conciliación (nunca prepara ni edita) y solo-lectura en el resto de módulos operativos.
+9. **Auditoría:** toda mutación de negocio pasa por `RegistradorAuditoria` (nunca escribir el modelo `Auditoria` directo). Aplica también a: firmar conciliación, aprobar rendición, generar informe.
+10. **Doble firma:** en Conciliación, Fiscal solo puede firmar **después** de Tesorero (el controller lo enforza). No hay excepciones — si el Tesorero está incapacitado, otro Presidente firma como Tesorero primero.
+11. **Fórmula SUNASS:** para JASS que reportan formalmente al ente rector, usar `CalculadoraCuota::cuotaMensualSunass()` (no el `cuotaMensual()` base). Los parámetros FIP y exonerados vienen del formulario del Consejo Directivo; nunca hardcodearlos.
+12. **Correlativos:** `numero_recibo` (por JASS, en tabla `jass.ultimo_numero_recibo` con `lockForUpdate`) y `numero` de Informe (por JASS y año, con `lockForUpdate`) NUNCA se calculan en el cliente ni con `MAX+1` sin lock. Reusar `GeneradorNumeroRecibo` y `GeneradorInforme` respectivamente.
+13. **Ambigüedad:** si algo no está resuelto en la spec §8 ni en la sección 7 del plan, detente y pregunta. No inventes reglas de negocio.
 
 ## Convenciones
-- Lógica de negocio en `app/Services/{Modulo}`; controllers delgados.
+- Lógica de negocio en `app/Services/{Modulo}` (`Pagos/`, `Morosidad/`, `Conciliacion/`, `Rendicion/`, `Informe/`, `Poa/`, `Auditoria/`, `Tenancy/`); controllers delgados.
 - FormRequest para toda validación (nunca `$request->validate()` inline en controllers con lógica).
-- Enums PHP en `app/Enums` para roles, estados y tipos.
-- Tests Pest de feature por módulo; helpers `actingComoPresidente(Jass)` etc. en `tests/Pest.php`.
-- Commits con prefijo de fase: `F2: CRUD de viviendas`.
+- Enums PHP en `app/Enums` para roles, estados y tipos (`Rol`, `TipoPago`, `CategoriaActividadPoa`, `Periodicidad`, `EstadoReunion`, `EstadoAnuncio`, `EstadoAsistencia`, `TipoComprobante`).
+- Tests Pest de feature por módulo; usar factory states (`->presidente($jass)`, `->tesorero($jass)`, `->fiscal($jass)`, `->vocal($jass)`, `->superadmin()`). El `ContextoJass` debe fijarse en cada test antes de crear entidades tenant.
+- Route model binding por `uuid` (trait `SeEnlazaPorUuid`) — nunca exponer IDs autoincrementales en URLs.
+- Commits con prefijo de fase: `F4: informe PDF trimestral`.
 
 ===
 

@@ -12,6 +12,7 @@ export interface JassFormData {
     comunidad: string;
     distrito: string;
     tiene_medidor: boolean;
+    usa_poa: boolean;
     tarifa_base_m3: string;
     periodicidad_mantenimiento: string;
     dia_vencimiento: string;
@@ -76,6 +77,20 @@ export default function JassForm({ data, setData, errors, processing, onSubmit, 
                         onChange={(e) => setData('tarifa_base_m3', e.target.value)}
                     />
                     <InputError message={errors.tarifa_base_m3} />
+                </div>
+            )}
+
+            {!data.tiene_medidor && (
+                <div className="flex items-center space-x-3">
+                    <Checkbox id="usa_poa" checked={data.usa_poa} onCheckedChange={(valor) => setData('usa_poa', valor === true)} />
+                    <div className="grid gap-1">
+                        <Label htmlFor="usa_poa">Esta JASS elabora su Plan Operativo Anual (POA)</Label>
+                        <p className="text-muted-foreground text-xs">
+                            Si lo activas, la cuota de mantenimiento se calculará desde el POA del presidente/tesorero en vez de
+                            ingresarse a mano al cobrar.
+                        </p>
+                        <InputError message={errors.usa_poa} />
+                    </div>
                 </div>
             )}
 

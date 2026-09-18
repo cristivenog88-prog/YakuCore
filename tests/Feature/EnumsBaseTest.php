@@ -8,9 +8,9 @@ use App\Enums\Rol;
 use App\Enums\TipoComprobante;
 use App\Enums\TipoPago;
 
-test('Rol tiene los cuatro roles del sistema', function () {
+test('Rol tiene los cinco roles del sistema (incluye Fiscal)', function () {
     expect(array_column(Rol::cases(), 'value'))
-        ->toBe(['superadmin', 'presidente', 'tesorero', 'vocal']);
+        ->toBe(['superadmin', 'presidente', 'tesorero', 'fiscal', 'vocal']);
 });
 
 test('TipoPago tiene los tres tipos de cobro', function () {
@@ -28,9 +28,9 @@ test('EstadoAnuncio tiene los dos estados', function () {
         ->toBe(['visible', 'inactivo']);
 });
 
-test('TipoComprobante tiene los tres tipos', function () {
+test('TipoComprobante tiene los cuatro tipos', function () {
     expect(array_column(TipoComprobante::cases(), 'value'))
-        ->toBe(['boleta', 'factura', 'declaracion_jurada']);
+        ->toBe(['boleta', 'factura', 'declaracion_jurada', 'ticket']);
 });
 
 test('Periodicidad tiene las cuatro periodicidades', function () {

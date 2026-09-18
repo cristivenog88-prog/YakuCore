@@ -27,7 +27,10 @@ class StoreMantenimientoRequest extends FormRequest
                     ->where('socio_id', $this->input('socio_id')),
             ],
             'periodo' => ['required', 'date_format:Y-m'],
-            'monto' => ['required', 'numeric', 'min:0.01'],
+            // Si la JASS usa POA, el monto lo calcula el servidor a partir de
+            // la cuota del POA (CLAUDE.md #2) — el campo del request se
+            // ignora en ese caso, así que aquí no se exige.
+            'monto' => [Rule::requiredIf(! app(ContextoJass::class)->jass()?->usa_poa), 'numeric', 'min:0.01'],
             'fecha_pago' => ['required', 'date'],
         ];
     }

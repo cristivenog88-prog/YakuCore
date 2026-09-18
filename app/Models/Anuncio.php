@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\EstadoAnuncio;
 use App\Models\Concerns\PerteneceAJass;
+use App\Models\Concerns\SeEnlazaPorUuid;
 use Database\Factories\AnuncioFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Anuncio extends Model
 {
     /** @use HasFactory<AnuncioFactory> */
-    use HasFactory, PerteneceAJass, SoftDeletes;
+    use HasFactory, PerteneceAJass, SeEnlazaPorUuid, SoftDeletes;
 
     protected $fillable = [
         'usuario_id',

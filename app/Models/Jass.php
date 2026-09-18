@@ -3,16 +3,18 @@
 namespace App\Models;
 
 use App\Enums\Periodicidad;
+use App\Models\Concerns\SeEnlazaPorUuid;
 use Database\Factories\JassFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Jass extends Model
 {
     /** @use HasFactory<JassFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, SeEnlazaPorUuid, SoftDeletes;
 
     protected $table = 'jass';
 
@@ -21,6 +23,7 @@ class Jass extends Model
         'comunidad',
         'distrito',
         'tiene_medidor',
+        'usa_poa',
         'tarifa_base_m3',
         'periodicidad_mantenimiento',
         'dia_vencimiento',
@@ -30,11 +33,17 @@ class Jass extends Model
     {
         return [
             'tiene_medidor' => 'boolean',
+            'usa_poa' => 'boolean',
             'tarifa_base_m3' => 'decimal:2',
             'periodicidad_mantenimiento' => Periodicidad::class,
             'dia_vencimiento' => 'integer',
             'ultimo_numero_recibo' => 'integer',
         ];
+    }
+
+    public function poas(): HasMany
+    {
+        return $this->hasMany(Poa::class);
     }
 
     protected static function booted(): void

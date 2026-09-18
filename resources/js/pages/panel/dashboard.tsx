@@ -6,7 +6,7 @@ import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxi
 interface PagoFila {
     id: number;
     tipo: string;
-    numero_recibo: number;
+    codigoRecibo: string;
     concepto: string;
     monto: string;
     fecha_pago: string;
@@ -22,13 +22,13 @@ interface Estadisticas {
     gastosAnio: number;
     balanceAnio: number;
     viviendasMorosas: { cantidad: number; porcentaje: number };
-    proximaReunion: { id: number; titulo: string; fecha: string; hora: string } | null;
+    proximaReunion: { id: number; uuid: string; titulo: string; fecha: string; hora: string } | null;
     ultimosPagos: PagoFila[];
     recaudacionMensual: { mes: number; total: number }[];
 }
 
 interface Props {
-    supervisando?: { id: number; nombre: string } | null;
+    supervisando?: { id: number; uuid: string; nombre: string } | null;
     estadisticas: Estadisticas | null;
 }
 
@@ -53,7 +53,7 @@ export default function PanelDashboard({ supervisando, estadisticas }: Props) {
         ? [
               { title: 'Superadmin', href: '/superadmin' },
               { title: 'JASS', href: '/superadmin/jass' },
-              { title: `Supervisar ${supervisando.nombre}`, href: `/supervision/${supervisando.id}` },
+              { title: `Supervisar ${supervisando.nombre}`, href: `/supervision/${supervisando.uuid}` },
           ]
         : [{ title: 'Panel', href: '/panel' }];
 
@@ -129,7 +129,7 @@ export default function PanelDashboard({ supervisando, estadisticas }: Props) {
                                 <p className="mb-2 text-sm font-medium">Próxima reunión</p>
                                 {estadisticas.proximaReunion ? (
                                     <Link
-                                        href={route('panel.reuniones.show', estadisticas.proximaReunion.id)}
+                                        href={route('panel.reuniones.show', estadisticas.proximaReunion.uuid)}
                                         className="text-sm underline"
                                     >
                                         {estadisticas.proximaReunion.titulo} — {estadisticas.proximaReunion.fecha} {estadisticas.proximaReunion.hora}
@@ -153,7 +153,7 @@ export default function PanelDashboard({ supervisando, estadisticas }: Props) {
                                                 {pago.socio.apellidos}, {pago.socio.nombres}
                                             </p>
                                             <p className="text-muted-foreground text-xs">
-                                                {pago.concepto} — Recibo N° {pago.numero_recibo} — {pago.fecha_pago}
+                                                {pago.concepto} — Recibo {pago.codigoRecibo} — {pago.fecha_pago}
                                             </p>
                                         </div>
                                         <span className="font-mono">S/ {pago.monto}</span>

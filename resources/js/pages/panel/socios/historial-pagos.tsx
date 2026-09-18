@@ -6,9 +6,10 @@ import { useMemo, useState } from 'react';
 
 interface PagoFila {
     id: number;
+    uuid: string;
     vivienda_id: number;
     tipo: string;
-    numero_recibo: number;
+    codigoRecibo: string;
     periodo: string;
     concepto: string;
     monto: string;
@@ -26,7 +27,7 @@ interface Props {
 }
 
 const columnas: ColumnaTabla<PagoFila>[] = [
-    { clave: 'numero_recibo', etiqueta: 'Recibo', render: (fila) => <span className="font-mono">N° {fila.numero_recibo}</span> },
+    { clave: 'codigoRecibo', etiqueta: 'Recibo', render: (fila) => <span className="font-mono">{fila.codigoRecibo}</span> },
     { clave: 'concepto', etiqueta: 'Concepto', render: (fila) => fila.concepto },
     { clave: 'periodo', etiqueta: 'Periodo', render: (fila) => <span className="font-mono">{fila.periodo}</span> },
     { clave: 'fecha_pago', etiqueta: 'Fecha', render: (fila) => fila.fecha_pago },
@@ -41,7 +42,7 @@ function TablaPagos({ pagos }: { pagos: PagoFila[] }) {
             obtenerLlave={(fila) => fila.id}
             vacio="Sin pagos registrados."
             acciones={(fila) => (
-                <Link href={route('panel.recibos.show', fila.id)} className="text-sm underline">
+                <Link href={route('panel.recibos.show', fila.uuid)} className="text-sm underline">
                     Ver recibo
                 </Link>
             )}

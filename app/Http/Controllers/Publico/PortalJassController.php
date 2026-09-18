@@ -32,12 +32,25 @@ class PortalJassController extends Controller
 
         $anuncios = Anuncio::where('estado', 'visible')
             ->orderByDesc('fecha_publicacion')
-            ->get(['id', 'titulo', 'contenido', 'fecha_publicacion']);
+            ->get(['id', 'titulo', 'contenido', 'fecha_publicacion'])
+            ->map(fn (Anuncio $anuncio) => [
+                'id' => $anuncio->id,
+                'titulo' => $anuncio->titulo,
+                'contenido' => $anuncio->contenido,
+                'fecha_publicacion' => $anuncio->fecha_publicacion->toDateString(),
+            ]);
 
         $reuniones = Reunion::where('estado', 'programada')
             ->orderBy('fecha')
             ->orderBy('hora')
-            ->get(['id', 'titulo', 'fecha', 'hora', 'lugar']);
+            ->get(['id', 'titulo', 'fecha', 'hora', 'lugar'])
+            ->map(fn (Reunion $reunion) => [
+                'id' => $reunion->id,
+                'titulo' => $reunion->titulo,
+                'fecha' => $reunion->fecha->toDateString(),
+                'hora' => substr((string) $reunion->hora, 0, 5),
+                'lugar' => $reunion->lugar,
+            ]);
 
         $inicioAnio = Carbon::create($anio, 1, 1)->startOfDay();
         $finAnio = Carbon::create($anio, 12, 31)->endOfDay();
@@ -61,7 +74,7 @@ class PortalJassController extends Controller
             ]);
 
         return Inertia::render('publico/jass/show', [
-            'jass' => $jass->only(['id', 'nombre', 'comunidad', 'distrito', 'tiene_medidor']),
+            'jass' => $jass->only(['id', 'uuid', 'nombre', 'comunidad', 'distrito', 'tiene_medidor']),
             'anuncios' => $anuncios,
             'reuniones' => $reuniones,
             'anio' => $anio,

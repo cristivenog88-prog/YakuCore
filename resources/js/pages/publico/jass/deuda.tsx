@@ -9,6 +9,7 @@ import { FormEventHandler, useState } from 'react';
 
 interface JassProps {
     id: number;
+    uuid: string;
     nombre: string;
     tiene_medidor: boolean;
 }
@@ -34,7 +35,7 @@ export default function ConsultaDeuda({ jass, resultado }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(route('portal.deuda.store', jass.id));
+        post(route('portal.deuda.store', jass.uuid));
     };
 
     return (

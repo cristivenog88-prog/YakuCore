@@ -71,6 +71,14 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function fiscal(?Jass $jass = null): static
+    {
+        return $this->state(fn () => [
+            'rol' => Rol::Fiscal,
+            'jass_id' => $jass?->id ?? Jass::factory(),
+        ]);
+    }
+
     public function vocal(?Jass $jass = null): static
     {
         return $this->state(fn () => [

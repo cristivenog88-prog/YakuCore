@@ -35,7 +35,11 @@ class MorosidadController extends Controller
                         ->orWhere('apellidos', 'like', "%{$busqueda}%");
                 });
             })
-            ->with(['socio:id,nombres,apellidos,dni', 'medidor:id,vivienda_id,codigo'])
+            ->with([
+                'socio:id,nombres,apellidos,dni',
+                'medidor:id,vivienda_id,codigo',
+                'jass:id,periodicidad_mantenimiento,dia_vencimiento,tiene_medidor',
+            ])
             ->orderBy('id')
             ->get();
 

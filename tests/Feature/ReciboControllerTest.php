@@ -23,12 +23,28 @@ test('el recibo muestra número, JASS, socio, vivienda, concepto y monto', funct
     $response->assertOk();
     $response->assertInertia(fn ($page) => $page
         ->component('panel/recibos/show')
-        ->where('pago.numero_recibo', 1)
+        ->where('pago.codigoRecibo', $jass->prefijo.'-000001')
         ->where('pago.jass.nombre', 'Villa Sol')
         ->where('pago.socio.dni', $socio->dni)
         ->where('pago.vivienda.direccion', $vivienda->direccion)
         ->where('pago.concepto', $pago->concepto)
     );
+});
+
+test('el recibo se enlaza por UUID, no por el id autoincremental: la URL no lo revela ni permite enumerarlo', function () {
+    $jass = Jass::factory()->create();
+    $presidente = User::factory()->presidente($jass)->create();
+
+    app(ContextoJass::class)->fijar($jass);
+    $this->actingAs($presidente);
+    $socio = Socio::factory()->create();
+    $vivienda = Vivienda::factory()->create(['socio_id' => $socio->id]);
+    $pago = app(RegistradorPago::class)->mantenimiento($socio, $vivienda, '2026-03', 15, '2026-03-05');
+
+    expect(route('panel.recibos.show', $pago))->toEndWith('/recibos/'.$pago->uuid);
+
+    $this->get('/panel/recibos/'.$pago->id)->assertNotFound();
+    $this->get(route('panel.recibos.show', $pago))->assertOk();
 });
 
 test('vocal puede ver el recibo (consulta de deudas) pero no cobrar', function () {
@@ -57,5 +73,5 @@ test('presidente de otra JASS no puede ver un recibo ajeno', function () {
     $vivienda = Vivienda::factory()->create(['socio_id' => $socio->id]);
     $pago = app(RegistradorPago::class)->mantenimiento($socio, $vivienda, '2026-03', 15, '2026-03-05');
 
-    $this->actingAs($presidenteB)->get(route('panel.recibos.show', $pago))->assertForbidden();
+    $this->actingAs($presidenteB)->get(route('panel.recibos.show', $pago))->assertNotFound();
 });

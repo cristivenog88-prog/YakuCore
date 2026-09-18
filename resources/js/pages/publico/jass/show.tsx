@@ -4,6 +4,7 @@ import { Head, Link, router } from '@inertiajs/react';
 
 interface JassProps {
     id: number;
+    uuid: string;
     nombre: string;
     comunidad: string;
     distrito: string;
@@ -47,6 +48,7 @@ interface Props {
 const etiquetasComprobante: Record<string, string> = {
     boleta: 'Boleta',
     factura: 'Factura',
+    ticket: 'Ticket de compra',
     declaracion_jurada: 'Declaración jurada',
 };
 
@@ -58,7 +60,7 @@ export default function PortalJassShow({ jass, anuncios, reuniones, anio, transp
     const anios = [anio - 1, anio, anio + 1];
 
     const cambiarAnio = (nuevoAnio: number) => {
-        router.get(route('portal.jass.show', jass.id), { anio: nuevoAnio }, { preserveState: true });
+        router.get(route('portal.jass.show', jass.uuid), { anio: nuevoAnio }, { preserveState: true });
     };
 
     return (
@@ -73,7 +75,7 @@ export default function PortalJassShow({ jass, anuncios, reuniones, anio, transp
                         </p>
                     </div>
                     <Button asChild>
-                        <Link href={route('portal.deuda.create', jass.id)}>Consultar mi deuda</Link>
+                        <Link href={route('portal.deuda.create', jass.uuid)}>Consultar mi deuda</Link>
                     </Button>
                 </div>
 

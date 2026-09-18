@@ -32,7 +32,7 @@ class SocioController extends Controller
                 });
             })
             ->orderBy('apellidos')
-            ->get(['id', 'nombres', 'apellidos', 'dni', 'telefono']);
+            ->get(['id', 'uuid', 'nombres', 'apellidos', 'dni', 'telefono']);
 
         return Inertia::render('panel/socios/index', [
             'socios' => $socios,
@@ -48,18 +48,30 @@ class SocioController extends Controller
         $jass = app(ContextoJass::class)->jass();
 
         return Inertia::render('panel/socios/show', [
-            'socio' => $socio->only(['id', 'nombres', 'apellidos', 'dni', 'telefono', 'direccion']),
+            'socio' => $socio->only(['id', 'uuid', 'nombres', 'apellidos', 'dni', 'telefono', 'direccion']),
             'viviendas' => $socio->viviendas()
-                ->with('medidor:id,vivienda_id,correlativo,codigo,lectura_inicial,activo')
+                ->with('medidor:id,uuid,vivienda_id,correlativo,codigo,lectura_inicial,activo')
                 ->orderBy('id')
-                ->get(['id', 'socio_id', 'direccion', 'activa']),
+                ->get(['id', 'uuid', 'socio_id', 'direccion', 'activa']),
             'puedeGestionar' => $request->user()->can('create', Socio::class),
+            'puedeCobrar' => $request->user()->can('create', Pago::class),
             'tieneMedidor' => (bool) $jass?->tiene_medidor,
             'prefijoJass' => $jass?->prefijo,
             'historialPagos' => Pago::where('socio_id', $socio->id)
                 ->orderByDesc('fecha_pago')
                 ->orderByDesc('id')
-                ->get(['id', 'vivienda_id', 'tipo', 'numero_recibo', 'periodo', 'concepto', 'monto', 'fecha_pago']),
+                ->get(['id', 'uuid', 'vivienda_id', 'tipo', 'numero_recibo', 'periodo', 'concepto', 'monto', 'fecha_pago'])
+                ->map(fn (Pago $pago) => [
+                    'id' => $pago->id,
+                    'uuid' => $pago->uuid,
+                    'vivienda_id' => $pago->vivienda_id,
+                    'tipo' => $pago->tipo->value,
+                    'codigoRecibo' => Pago::formatearCodigo($jass->prefijo, $pago->numero_recibo),
+                    'periodo' => $pago->periodo,
+                    'concepto' => $pago->concepto,
+                    'monto' => $pago->monto,
+                    'fecha_pago' => $pago->fecha_pago->toDateString(),
+                ]),
         ]);
     }
 
@@ -86,7 +98,7 @@ class SocioController extends Controller
         $this->authorize('update', $socio);
 
         return Inertia::render('panel/socios/edit', [
-            'socio' => $socio->only(['id', 'nombres', 'apellidos', 'dni', 'telefono', 'direccion']),
+            'socio' => $socio->only(['id', 'uuid', 'nombres', 'apellidos', 'dni', 'telefono', 'direccion']),
         ]);
     }
 

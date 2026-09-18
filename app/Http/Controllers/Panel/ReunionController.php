@@ -20,7 +20,16 @@ class ReunionController extends Controller
         $this->authorize('viewAny', Reunion::class);
 
         $reuniones = Reunion::orderByDesc('fecha')
-            ->get(['id', 'titulo', 'fecha', 'hora', 'lugar', 'estado']);
+            ->get(['id', 'uuid', 'titulo', 'fecha', 'hora', 'lugar', 'estado'])
+            ->map(fn (Reunion $reunion) => [
+                'id' => $reunion->id,
+                'uuid' => $reunion->uuid,
+                'titulo' => $reunion->titulo,
+                'fecha' => $reunion->fecha->toDateString(),
+                'hora' => substr((string) $reunion->hora, 0, 5),
+                'lugar' => $reunion->lugar,
+                'estado' => $reunion->estado->value,
+            ]);
 
         return Inertia::render('panel/reuniones/index', [
             'reuniones' => $reuniones,
@@ -53,6 +62,7 @@ class ReunionController extends Controller
         return Inertia::render('panel/reuniones/show', [
             'reunion' => [
                 'id' => $reunion->id,
+                'uuid' => $reunion->uuid,
                 'titulo' => $reunion->titulo,
                 'descripcion' => $reunion->descripcion,
                 'fecha' => $reunion->fecha->toDateString(),
@@ -76,6 +86,7 @@ class ReunionController extends Controller
         return Inertia::render('panel/reuniones/edit', [
             'reunion' => [
                 'id' => $reunion->id,
+                'uuid' => $reunion->uuid,
                 'titulo' => $reunion->titulo,
                 'descripcion' => $reunion->descripcion,
                 'fecha' => $reunion->fecha->toDateString(),

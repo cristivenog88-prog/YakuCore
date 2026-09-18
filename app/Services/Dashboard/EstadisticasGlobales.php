@@ -46,13 +46,14 @@ class EstadisticasGlobales
             ->groupBy('jass_id')
             ->pluck('total', 'jass_id');
 
-        $filas = Jass::orderBy('nombre')->get(['id', 'nombre'])
+        $filas = Jass::orderBy('nombre')->get(['id', 'uuid', 'nombre'])
             ->map(function (Jass $jass) use ($sociosPorJass, $viviendasActivasPorJass, $viviendasMorosasPorJass, $recaudacionPorJass) {
                 $viviendasActivas = (int) ($viviendasActivasPorJass[$jass->id] ?? 0);
                 $viviendasMorosas = (int) ($viviendasMorosasPorJass[$jass->id] ?? 0);
 
                 return [
                     'id' => $jass->id,
+                    'uuid' => $jass->uuid,
                     'nombre' => $jass->nombre,
                     'socios' => (int) ($sociosPorJass[$jass->id] ?? 0),
                     'recaudacionAnio' => (float) ($recaudacionPorJass[$jass->id] ?? 0),

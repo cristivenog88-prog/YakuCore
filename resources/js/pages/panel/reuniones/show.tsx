@@ -14,6 +14,7 @@ interface AsistenciaFila {
 
 interface ReunionProps {
     id: number;
+    uuid: string;
     titulo: string;
     descripcion: string | null;
     fecha: string;
@@ -57,7 +58,7 @@ export default function ReunionShow({ reunion, puedeGestionar, puedeTomarAsisten
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Panel', href: '/panel' },
         { title: 'Reuniones', href: '/panel/reuniones' },
-        { title: reunion.titulo, href: route('panel.reuniones.show', reunion.id) },
+        { title: reunion.titulo, href: route('panel.reuniones.show', reunion.uuid) },
     ];
 
     const cancelar = () => {
@@ -65,17 +66,17 @@ export default function ReunionShow({ reunion, puedeGestionar, puedeTomarAsisten
             return;
         }
 
-        router.post(route('panel.reuniones.cancelar', reunion.id));
+        router.post(route('panel.reuniones.cancelar', reunion.uuid));
     };
 
     return (
         <PanelLayout breadcrumbs={breadcrumbs}>
             <Head title={reunion.titulo} />
             <div className="flex flex-col gap-6 p-4">
-                <div className="flex items-start justify-between">
-                    <div>
-                        <div className="flex items-center gap-2">
-                            <h1 className="text-lg font-semibold">{reunion.titulo}</h1>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2">
+                            <h1 className="text-lg font-semibold wrap-break-word">{reunion.titulo}</h1>
                             <BadgeEstado variante={variantePorEstado[reunion.estado]}>{etiquetaPorEstado[reunion.estado]}</BadgeEstado>
                         </div>
                         <dl className="text-muted-foreground mt-1 flex flex-col gap-0.5 text-sm">
@@ -89,9 +90,9 @@ export default function ReunionShow({ reunion, puedeGestionar, puedeTomarAsisten
                     </div>
 
                     {puedeGestionar && (
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                             <Button variant="outline" asChild>
-                                <Link href={route('panel.reuniones.edit', reunion.id)}>Editar</Link>
+                                <Link href={route('panel.reuniones.edit', reunion.uuid)}>Editar</Link>
                             </Button>
                             <Button variant="outline" onClick={cancelar}>
                                 Cancelar reunión
@@ -102,7 +103,7 @@ export default function ReunionShow({ reunion, puedeGestionar, puedeTomarAsisten
 
                 {puedeTomarAsistencia && (
                     <Button asChild className="w-fit">
-                        <Link href={route('panel.reuniones.asistencia.create', reunion.id)}>Tomar asistencia</Link>
+                        <Link href={route('panel.reuniones.asistencia.create', reunion.uuid)}>Tomar asistencia</Link>
                     </Button>
                 )}
 

@@ -13,6 +13,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function GastoCreate() {
     const { data, setData, post, processing, errors } = useForm<GastoFormData>({
         descripcion: '',
+        proveedor: '',
+        fecha_compra: new Date().toISOString().slice(0, 10),
         monto: '',
         tipo_comprobante: '',
         foto: null,

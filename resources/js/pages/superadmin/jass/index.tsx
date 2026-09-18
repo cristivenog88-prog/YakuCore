@@ -6,6 +6,7 @@ import { Head, Link, router } from '@inertiajs/react';
 
 interface JassFila {
     id: number;
+    uuid: string;
     nombre: string;
     comunidad: string;
     distrito: string;
@@ -36,7 +37,7 @@ export default function JassIndex({ jass }: Props) {
             return;
         }
 
-        router.delete(route('superadmin.jass.destroy', fila.id));
+        router.delete(route('superadmin.jass.destroy', fila.uuid));
     };
 
     return (
@@ -58,10 +59,13 @@ export default function JassIndex({ jass }: Props) {
                     acciones={(fila) => (
                         <>
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={route('supervision.dashboard', fila.id)}>Supervisar</Link>
+                                <Link href={route('supervision.dashboard', fila.uuid)}>Supervisar</Link>
                             </Button>
                             <Button variant="outline" size="sm" asChild>
-                                <Link href={route('superadmin.jass.edit', fila.id)}>Editar</Link>
+                                <Link href={route('superadmin.jass.usuarios.index', fila.uuid)}>Usuarios</Link>
+                            </Button>
+                            <Button variant="outline" size="sm" asChild>
+                                <Link href={route('superadmin.jass.edit', fila.uuid)}>Editar</Link>
                             </Button>
                             <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
                                 Eliminar

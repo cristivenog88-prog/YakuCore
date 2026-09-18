@@ -31,7 +31,7 @@ class MedidorController extends Controller
 
         $this->auditoria->registrar('crear', $medidor, $request->validated());
 
-        return to_route('panel.socios.show', $vivienda->socio_id);
+        return to_route('panel.socios.show', $vivienda->socio);
     }
 
     public function update(UpdateMedidorRequest $request, Vivienda $vivienda, Medidor $medidor): RedirectResponse
@@ -42,7 +42,7 @@ class MedidorController extends Controller
 
         $this->auditoria->registrar('actualizar', $medidor, $request->validated());
 
-        return to_route('panel.socios.show', $vivienda->socio_id);
+        return to_route('panel.socios.show', $vivienda->socio);
     }
 
     /**
@@ -59,6 +59,6 @@ class MedidorController extends Controller
 
         $servicio->ejecutar($medidor, $request->validated('motivo'));
 
-        return to_route('panel.socios.show', $vivienda->socio_id);
+        return to_route('panel.socios.show', $vivienda->socio);
     }
 }

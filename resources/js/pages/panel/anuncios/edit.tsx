@@ -6,6 +6,7 @@ import AnuncioForm, { type AnuncioFormData } from './anuncio-form';
 
 interface AnuncioProps {
     id: number;
+    uuid: string;
     titulo: string;
     contenido: string;
     fecha_publicacion: string;
@@ -32,7 +33,7 @@ export default function AnuncioEdit({ anuncio }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('panel.anuncios.update', anuncio.id));
+        put(route('panel.anuncios.update', anuncio.uuid));
     };
 
     return (

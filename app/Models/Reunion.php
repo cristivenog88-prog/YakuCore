@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\EstadoReunion;
 use App\Models\Concerns\PerteneceAJass;
+use App\Models\Concerns\SeEnlazaPorUuid;
 use Database\Factories\ReunionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Reunion extends Model
 {
     /** @use HasFactory<ReunionFactory> */
-    use HasFactory, PerteneceAJass;
+    use HasFactory, PerteneceAJass, SeEnlazaPorUuid;
 
     protected $table = 'reuniones';
 

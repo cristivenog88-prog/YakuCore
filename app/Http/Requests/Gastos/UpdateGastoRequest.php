@@ -17,6 +17,8 @@ class UpdateGastoRequest extends FormRequest
     {
         return [
             'descripcion' => ['required', 'string', 'max:255'],
+            'proveedor' => ['required', 'string', 'max:150'],
+            'fecha_compra' => ['required', 'date', 'before_or_equal:today'],
             'monto' => ['required', 'numeric', 'min:0.01'],
             'tipo_comprobante' => ['required', Rule::enum(TipoComprobante::class)],
             'foto' => ['nullable', File::types(['jpg', 'jpeg', 'png', 'webp', 'pdf'])->max(5 * 1024)],

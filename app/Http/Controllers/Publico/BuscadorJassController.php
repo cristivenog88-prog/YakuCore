@@ -22,7 +22,7 @@ class BuscadorJassController extends Controller
         $resultados = $busqueda !== ''
             ? Jass::where('nombre', 'like', "%{$busqueda}%")
                 ->orderBy('nombre')
-                ->get(['id', 'nombre', 'comunidad', 'distrito'])
+                ->get(['id', 'uuid', 'nombre', 'comunidad', 'distrito'])
             : collect();
 
         return Inertia::render('publico/buscar', [

@@ -50,6 +50,10 @@ class EstadisticasJass
         $pagosDelAnio = Pago::where('fecha_pago', '>=', $inicioAnio)->get(['fecha_pago', 'monto']);
         $totalesPorMes = $pagosDelAnio->groupBy(fn (Pago $pago) => $pago->fecha_pago->month)->map(fn ($grupo) => (float) $grupo->sum('monto'));
 
+        $proximaReunion = Reunion::where('estado', EstadoReunion::Programada)
+            ->orderBy('fecha')->orderBy('hora')
+            ->first(['id', 'uuid', 'titulo', 'fecha', 'hora']);
+
         return [
             'sociosActivos' => $sociosActivos,
             'viviendasActivas' => $viviendasActivas,
@@ -62,13 +66,26 @@ class EstadisticasJass
                 'cantidad' => $viviendasMorosas,
                 'porcentaje' => $viviendasActivas > 0 ? round($viviendasMorosas / $viviendasActivas * 100, 1) : 0.0,
             ],
-            'proximaReunion' => Reunion::where('estado', EstadoReunion::Programada)
-                ->orderBy('fecha')->orderBy('hora')
-                ->first(['id', 'titulo', 'fecha', 'hora']),
+            'proximaReunion' => $proximaReunion === null ? null : [
+                'id' => $proximaReunion->id,
+                'uuid' => $proximaReunion->uuid,
+                'titulo' => $proximaReunion->titulo,
+                'fecha' => $proximaReunion->fecha->toDateString(),
+                'hora' => substr((string) $proximaReunion->hora, 0, 5),
+            ],
             'ultimosPagos' => Pago::orderByDesc('fecha_pago')->orderByDesc('id')
                 ->with('socio:id,nombres,apellidos')
                 ->take(10)
-                ->get(['id', 'socio_id', 'tipo', 'numero_recibo', 'concepto', 'monto', 'fecha_pago']),
+                ->get(['id', 'socio_id', 'tipo', 'numero_recibo', 'concepto', 'monto', 'fecha_pago'])
+                ->map(fn (Pago $pago) => [
+                    'id' => $pago->id,
+                    'tipo' => $pago->tipo->value,
+                    'codigoRecibo' => Pago::formatearCodigo($jass->prefijo, $pago->numero_recibo),
+                    'concepto' => $pago->concepto,
+                    'monto' => $pago->monto,
+                    'fecha_pago' => $pago->fecha_pago->toDateString(),
+                    'socio' => $pago->socio,
+                ]),
             'recaudacionMensual' => collect(range(1, 12))->map(fn (int $mes) => [
                 'mes' => $mes,
                 'total' => $totalesPorMes[$mes] ?? 0.0,

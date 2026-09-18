@@ -22,7 +22,7 @@ class DashboardController extends Controller
         $jassActiva = app(ContextoJass::class)->jass();
 
         return Inertia::render('panel/dashboard', [
-            'supervisando' => $jass?->only(['id', 'nombre']),
+            'supervisando' => $jass?->only(['id', 'uuid', 'nombre']),
             'estadisticas' => $jassActiva ? $this->estadisticas->calcular($jassActiva) : null,
         ]);
     }

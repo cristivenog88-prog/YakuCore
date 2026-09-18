@@ -7,6 +7,7 @@ import { Head, Link, router } from '@inertiajs/react';
 
 interface AnuncioFila {
     id: number;
+    uuid: string;
     titulo: string;
     contenido: string;
     fecha_publicacion: string;
@@ -39,7 +40,7 @@ export default function AnunciosIndex({ anuncios, puedeGestionar }: Props) {
             return;
         }
 
-        router.delete(route('panel.anuncios.destroy', fila.id));
+        router.delete(route('panel.anuncios.destroy', fila.uuid));
     };
 
     return (
@@ -65,7 +66,7 @@ export default function AnunciosIndex({ anuncios, puedeGestionar }: Props) {
                             ? (fila) => (
                                   <>
                                       <Button variant="outline" size="sm" asChild>
-                                          <Link href={route('panel.anuncios.edit', fila.id)}>Editar</Link>
+                                          <Link href={route('panel.anuncios.edit', fila.uuid)}>Editar</Link>
                                       </Button>
                                       <Button variant="outline" size="sm" onClick={() => eliminar(fila)}>
                                           Eliminar

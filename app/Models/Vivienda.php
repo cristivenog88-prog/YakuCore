@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\PerteneceAJass;
+use App\Models\Concerns\SeEnlazaPorUuid;
 use Database\Factories\ViviendaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Vivienda extends Model
 {
     /** @use HasFactory<ViviendaFactory> */
-    use HasFactory, PerteneceAJass, SoftDeletes;
+    use HasFactory, PerteneceAJass, SeEnlazaPorUuid, SoftDeletes;
 
     protected $fillable = [
         'socio_id',

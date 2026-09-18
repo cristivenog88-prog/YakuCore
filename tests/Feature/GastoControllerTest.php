@@ -13,6 +13,8 @@ function datosGastoValidos(array $sobrescribir = []): array
 {
     return array_merge([
         'descripcion' => 'Compra de cloro para tratamiento',
+        'proveedor' => 'Química Andina SAC',
+        'fecha_compra' => '2026-03-10',
         'monto' => '150.50',
         'tipo_comprobante' => 'boleta',
     ], $sobrescribir);
@@ -122,7 +124,7 @@ test('el comprobante no es accesible desde otra JASS', function () {
     $this->actingAs($presidenteA)->post(route('panel.gastos.store'), datosGastoValidos(['foto' => $foto]));
     $gasto = Gasto::firstOrFail();
 
-    $this->actingAs($presidenteB)->get(route('panel.gastos.comprobante', $gasto))->assertForbidden();
+    $this->actingAs($presidenteB)->get(route('panel.gastos.comprobante', $gasto))->assertNotFound();
 });
 
 test('el dueño de la JASS puede descargar su propio comprobante', function () {
@@ -135,6 +137,29 @@ test('el dueño de la JASS puede descargar su propio comprobante', function () {
     $gasto = Gasto::firstOrFail();
 
     $this->actingAs($presidente)->get(route('panel.gastos.comprobante', $gasto))->assertOk();
+});
+
+test('presidente puede editar un gasto dentro de las 24 horas', function () {
+    $jass = Jass::factory()->create();
+    $presidente = User::factory()->presidente($jass)->create();
+    app(ContextoJass::class)->fijar($jass);
+    $gasto = Gasto::factory()->create(['descripcion' => 'Original']);
+
+    $response = $this->actingAs($presidente)->put(route('panel.gastos.update', $gasto), datosGastoValidos(['descripcion' => 'Corregido']));
+
+    $response->assertRedirect(route('panel.gastos.index'));
+    expect($gasto->fresh()->descripcion)->toBe('Corregido');
+});
+
+test('pasadas 24 horas del registro, editar o eliminar un gasto queda prohibido', function () {
+    $jass = Jass::factory()->create();
+    $presidente = User::factory()->presidente($jass)->create();
+    app(ContextoJass::class)->fijar($jass);
+    $gasto = Gasto::factory()->create();
+    $gasto->forceFill(['created_at' => now()->subDay()->subMinute()])->save();
+
+    $this->actingAs($presidente)->get(route('panel.gastos.edit', $gasto))->assertForbidden();
+    $this->actingAs($presidente)->put(route('panel.gastos.update', $gasto), datosGastoValidos())->assertForbidden();
 });
 
 test('el listado agrupa los totales por mes', function () {

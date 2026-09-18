@@ -25,10 +25,11 @@ export interface SharedData {
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    jass: { tiene_medidor: boolean; usa_poa: boolean } | null;
     [key: string]: unknown;
 }
 
-export type Rol = 'superadmin' | 'presidente' | 'tesorero' | 'vocal';
+export type Rol = 'superadmin' | 'presidente' | 'tesorero' | 'fiscal' | 'vocal';
 
 export interface User {
     id: number;

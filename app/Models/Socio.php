@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\PerteneceAJass;
+use App\Models\Concerns\SeEnlazaPorUuid;
 use Database\Factories\SocioFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Socio extends Model
 {
     /** @use HasFactory<SocioFactory> */
-    use HasFactory, PerteneceAJass, SoftDeletes;
+    use HasFactory, PerteneceAJass, SeEnlazaPorUuid, SoftDeletes;
 
     protected $fillable = [
         'nombres',

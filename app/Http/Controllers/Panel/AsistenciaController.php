@@ -23,6 +23,7 @@ class AsistenciaController extends Controller
         return Inertia::render('panel/reuniones/tomar-asistencia', [
             'reunion' => [
                 'id' => $reunion->id,
+                'uuid' => $reunion->uuid,
                 'titulo' => $reunion->titulo,
                 'fecha' => $reunion->fecha->toDateString(),
             ],

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\PerteneceAJass;
+use App\Models\Concerns\SeEnlazaPorUuid;
 use Database\Factories\MedidorFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Medidor extends Model
 {
     /** @use HasFactory<MedidorFactory> */
-    use HasFactory, PerteneceAJass;
+    use HasFactory, PerteneceAJass, SeEnlazaPorUuid;
 
     protected $table = 'medidores';
 

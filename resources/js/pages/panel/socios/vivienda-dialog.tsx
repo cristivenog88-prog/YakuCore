@@ -15,8 +15,8 @@ interface ViviendaFormData {
 }
 
 interface Props {
-    socioId: number;
-    vivienda?: { id: number; direccion: string; activa: boolean };
+    socioId: string;
+    vivienda?: { uuid: string; direccion: string; activa: boolean };
     trigger: React.ReactNode;
 }
 
@@ -40,7 +40,7 @@ export default function ViviendaDialog({ socioId, vivienda, trigger }: Props) {
         };
 
         if (esEdicion) {
-            put(route('panel.socios.viviendas.update', [socioId, vivienda.id]), opciones);
+            put(route('panel.socios.viviendas.update', [socioId, vivienda.uuid]), opciones);
         } else {
             post(route('panel.socios.viviendas.store', socioId), opciones);
         }

@@ -1,38 +1,33 @@
 import { Button } from '@/components/ui/button';
+import BadgeRol from '@/components/yaku/badge-rol';
 import TablaResponsiva, { type ColumnaTabla } from '@/components/yaku/tabla-responsiva';
 import PanelLayout from '@/layouts/panel-layout';
-import { type BreadcrumbItem } from '@/types';
+import { type BreadcrumbItem, type Rol } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
 
 interface UsuarioFila {
     id: number;
+    uuid: string;
     name: string;
     email: string;
-    rol: string;
+    rol: Rol;
 }
 
 interface Props {
-    jass: { id: number; nombre: string };
+    jass: { id: number; uuid: string; nombre: string };
     usuarios: UsuarioFila[];
     esSuperadmin: boolean;
 }
 
-const etiquetasRol: Record<string, string> = {
-    superadmin: 'Superadmin',
-    presidente: 'Presidente',
-    tesorero: 'Tesorero',
-    vocal: 'Vocal',
-};
-
 export default function UsuariosIndex({ jass, usuarios, esSuperadmin }: Props) {
-    const rutaIndice = esSuperadmin ? route('superadmin.jass.usuarios.index', jass.id) : route('panel.usuarios.index');
-    const rutaCrear = esSuperadmin ? route('superadmin.jass.usuarios.create', jass.id) : route('panel.usuarios.create');
+    const rutaIndice = esSuperadmin ? route('superadmin.jass.usuarios.index', jass.uuid) : route('panel.usuarios.index');
+    const rutaCrear = esSuperadmin ? route('superadmin.jass.usuarios.create', jass.uuid) : route('panel.usuarios.create');
 
     const breadcrumbs: BreadcrumbItem[] = esSuperadmin
         ? [
               { title: 'Superadmin', href: '/superadmin' },
               { title: 'JASS', href: '/superadmin/jass' },
-              { title: jass.nombre, href: route('superadmin.jass.edit', jass.id) },
+              { title: jass.nombre, href: route('superadmin.jass.edit', jass.uuid) },
               { title: 'Usuarios', href: rutaIndice },
           ]
         : [
@@ -46,8 +41,8 @@ export default function UsuariosIndex({ jass, usuarios, esSuperadmin }: Props) {
         }
 
         const rutaDestroy = esSuperadmin
-            ? route('superadmin.jass.usuarios.destroy', [jass.id, fila.id])
-            : route('panel.usuarios.destroy', fila.id);
+            ? route('superadmin.jass.usuarios.destroy', [jass.uuid, fila.uuid])
+            : route('panel.usuarios.destroy', fila.uuid);
 
         router.delete(rutaDestroy);
     };
@@ -55,7 +50,7 @@ export default function UsuariosIndex({ jass, usuarios, esSuperadmin }: Props) {
     const columnas: ColumnaTabla<UsuarioFila>[] = [
         { clave: 'name', etiqueta: 'Nombre', render: (fila) => fila.name },
         { clave: 'email', etiqueta: 'Correo', render: (fila) => fila.email },
-        { clave: 'rol', etiqueta: 'Rol', render: (fila) => etiquetasRol[fila.rol] ?? fila.rol },
+        { clave: 'rol', etiqueta: 'Rol', render: (fila) => <BadgeRol rol={fila.rol} /> },
     ];
 
     return (
@@ -76,8 +71,8 @@ export default function UsuariosIndex({ jass, usuarios, esSuperadmin }: Props) {
                     vacio="Todavía no hay usuarios registrados."
                     acciones={(fila) => {
                         const rutaEditar = esSuperadmin
-                            ? route('superadmin.jass.usuarios.edit', [jass.id, fila.id])
-                            : route('panel.usuarios.edit', fila.id);
+                            ? route('superadmin.jass.usuarios.edit', [jass.uuid, fila.uuid])
+                            : route('panel.usuarios.edit', fila.uuid);
 
                         return (
                             <>

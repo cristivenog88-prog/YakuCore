@@ -90,5 +90,5 @@ test('presidente no puede agregar viviendas a un socio de otra JASS', function (
     app(ContextoJass::class)->fijar($jassB);
     $socioB = Socio::factory()->create();
 
-    $this->actingAs($presidenteA)->get(route('panel.socios.show', $socioB))->assertForbidden();
+    $this->actingAs($presidenteA)->get(route('panel.socios.show', $socioB))->assertNotFound();
 });

@@ -17,7 +17,7 @@ class ConsultaDeudaController extends Controller
     public function create(Jass $jass): Response
     {
         return Inertia::render('publico/jass/deuda', [
-            'jass' => $jass->only(['id', 'nombre', 'tiene_medidor']),
+            'jass' => $jass->only(['id', 'uuid', 'nombre', 'tiene_medidor']),
             'resultado' => session('resultado'),
         ]);
     }

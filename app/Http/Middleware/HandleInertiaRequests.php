@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Tenancy\ContextoJass;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -45,6 +46,10 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            // Cierre (closure) para que se evalúe recién al renderizar la
+            // respuesta, después de que el middleware 'jass' (que corre
+            // luego de este en el pipeline) haya fijado ContextoJass.
+            'jass' => fn () => app(ContextoJass::class)->jass()?->only(['tiene_medidor', 'usa_poa']),
         ]);
     }
 }

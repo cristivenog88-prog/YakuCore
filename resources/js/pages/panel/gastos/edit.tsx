@@ -6,7 +6,10 @@ import GastoForm, { type GastoFormData } from './gasto-form';
 
 interface GastoProps {
     id: number;
+    uuid: string;
     descripcion: string;
+    proveedor: string | null;
+    fechaCompra: string | null;
     monto: number;
     tipoComprobante: string;
     tieneFoto: boolean;
@@ -25,6 +28,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function GastoEdit({ gasto }: Props) {
     const { data, setData, put, processing, errors } = useForm<GastoFormData>({
         descripcion: gasto.descripcion,
+        proveedor: gasto.proveedor ?? '',
+        fecha_compra: gasto.fechaCompra ?? '',
         monto: String(gasto.monto),
         tipo_comprobante: gasto.tipoComprobante,
         foto: null,
@@ -32,7 +37,7 @@ export default function GastoEdit({ gasto }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('panel.gastos.update', gasto.id));
+        put(route('panel.gastos.update', gasto.uuid));
     };
 
     return (

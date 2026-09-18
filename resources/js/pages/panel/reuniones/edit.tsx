@@ -6,6 +6,7 @@ import ReunionForm, { type ReunionFormData } from './reunion-form';
 
 interface ReunionProps {
     id: number;
+    uuid: string;
     titulo: string;
     descripcion: string | null;
     fecha: string;
@@ -36,7 +37,7 @@ export default function ReunionEdit({ reunion }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('panel.reuniones.update', reunion.id));
+        put(route('panel.reuniones.update', reunion.uuid));
     };
 
     return (

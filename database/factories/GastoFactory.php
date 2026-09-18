@@ -19,6 +19,8 @@ class GastoFactory extends Factory
         return [
             'usuario_id' => User::factory()->presidente(),
             'descripcion' => fake()->sentence(4),
+            'proveedor' => fake()->company(),
+            'fecha_compra' => fake()->dateTimeBetween('-1 year', 'now')->format('Y-m-d'),
             'monto' => fake()->randomFloat(2, 10, 500),
             'tipo_comprobante' => fake()->randomElement(TipoComprobante::cases()),
             'foto_path' => null,

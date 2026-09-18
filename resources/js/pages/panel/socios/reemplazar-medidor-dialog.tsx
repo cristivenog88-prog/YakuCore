@@ -6,8 +6,8 @@ import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 
 interface Props {
-    viviendaId: number;
-    medidorId: number;
+    viviendaId: string;
+    medidorId: string;
     trigger: React.ReactNode;
 }
 

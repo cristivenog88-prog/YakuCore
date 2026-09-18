@@ -9,14 +9,14 @@ import { LoaderCircle } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 
 interface MedidorExistente {
-    id: number;
+    uuid: string;
     correlativo: number;
     lectura_inicial: string;
     activo: boolean;
 }
 
 interface Props {
-    viviendaId: number;
+    viviendaId: string;
     prefijoJass: string;
     medidor?: MedidorExistente;
     trigger: React.ReactNode;
@@ -50,7 +50,7 @@ export default function MedidorDialog({ viviendaId, prefijoJass, medidor, trigge
         };
 
         if (esEdicion) {
-            put(route('panel.viviendas.medidor.update', [viviendaId, medidor.id]), opciones);
+            put(route('panel.viviendas.medidor.update', [viviendaId, medidor.uuid]), opciones);
         } else {
             post(route('panel.viviendas.medidor.store', viviendaId), opciones);
         }

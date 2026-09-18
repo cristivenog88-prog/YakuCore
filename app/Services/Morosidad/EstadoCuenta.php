@@ -31,7 +31,7 @@ class EstadoCuenta
      */
     public function periodosPendientes(Vivienda $vivienda): array
     {
-        $jass = $vivienda->jass;
+        $jass = $vivienda->loadMissing('jass')->jass;
         $hoy = Carbon::today();
         $desde = $vivienda->created_at->copy()->startOfDay();
 
@@ -55,7 +55,7 @@ class EstadoCuenta
      */
     public function fechaMorosaDesde(Vivienda $vivienda): ?Carbon
     {
-        $jass = $vivienda->jass;
+        $jass = $vivienda->loadMissing('jass')->jass;
         $hoy = Carbon::today();
         $desde = $vivienda->created_at->copy()->startOfDay();
 

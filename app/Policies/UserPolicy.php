@@ -25,7 +25,7 @@ class UserPolicy
 
         if ($user->esPresidente()) {
             return $user->jass_id === $model->jass_id
-                && in_array($model->rol, [Rol::Tesorero, Rol::Vocal], true);
+                && in_array($model->rol, [Rol::Tesorero, Rol::Fiscal, Rol::Vocal], true);
         }
 
         return false;
@@ -60,7 +60,7 @@ class UserPolicy
 
         if ($user->esPresidente()) {
             return $user->jass_id === $jassIdObjetivo
-                && in_array($rolObjetivo, [Rol::Tesorero, Rol::Vocal], true);
+                && in_array($rolObjetivo, [Rol::Tesorero, Rol::Fiscal, Rol::Vocal], true);
         }
 
         return false;

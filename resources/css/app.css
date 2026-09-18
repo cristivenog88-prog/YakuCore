@@ -83,6 +83,21 @@
     --color-yaku-error-suave: #f3dede;
     --color-yaku-advertencia: #8a5a15;
     --color-yaku-advertencia-suave: #f3e6d0;
+
+    /* Identidad por rol (docs/design-system.md §5) — solo para identificar
+       quién es quién de un vistazo (badge de rol, avatar), nunca para
+       indicar estado de un registro (eso sigue siendo yaku-exito/error/
+       advertencia de arriba). */
+    --color-yaku-rol-presidente: #0f6e8c;
+    --color-yaku-rol-presidente-suave: #dceef3;
+    --color-yaku-rol-tesorero: #9b2c2c;
+    --color-yaku-rol-tesorero-suave: #f3dede;
+    --color-yaku-rol-vocal: #8a6d00;
+    --color-yaku-rol-vocal-suave: #f3edc7;
+    --color-yaku-rol-superadmin: #06396c;
+    --color-yaku-rol-superadmin-suave: #b1ccdf;
+    --color-yaku-rol-fiscal: #4a2b7a;
+    --color-yaku-rol-fiscal-suave: #ece3f5;
 }
 
 /*

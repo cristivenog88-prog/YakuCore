@@ -32,7 +32,7 @@ test('el contexto de JASS activo en supervisión es el de la ruta, no el del sup
         return response()->json(['jass_id' => app(ContextoJass::class)->id()]);
     });
 
-    $response = $this->actingAs($superadmin)->get("/supervision/{$jass->id}/_prueba/contexto");
+    $response = $this->actingAs($superadmin)->get("/supervision/{$jass->uuid}/_prueba/contexto");
 
     $response->assertJson(['jass_id' => $jass->id]);
 });

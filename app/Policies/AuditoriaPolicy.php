@@ -16,7 +16,7 @@ class AuditoriaPolicy
     public function viewAny(User $user): bool
     {
         return match ($user->rol) {
-            Rol::Superadmin, Rol::Presidente, Rol::Tesorero => true,
+            Rol::Superadmin, Rol::Presidente, Rol::Tesorero, Rol::Fiscal => true,
             Rol::Vocal => false,
         };
     }

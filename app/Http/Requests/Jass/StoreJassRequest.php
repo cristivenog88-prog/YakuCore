@@ -26,6 +26,14 @@ class StoreJassRequest extends FormRequest
                 'min:0',
                 'max:999999.99',
             ],
+            // Solo se pregunta cuando la JASS no tiene medidor: si elabora
+            // su Plan Operativo Anual, la cuota de mantenimiento se calcula
+            // desde el POA en vez de ingresarse a mano al cobrar.
+            'usa_poa' => [
+                Rule::requiredIf(fn () => ! $this->boolean('tiene_medidor')),
+                'nullable',
+                'boolean',
+            ],
             'periodicidad_mantenimiento' => ['required', Rule::enum(Periodicidad::class)],
             'dia_vencimiento' => ['required', 'integer', 'between:1,28'],
         ];
@@ -35,6 +43,7 @@ class StoreJassRequest extends FormRequest
     {
         return [
             'tarifa_base_m3.required' => 'La tarifa base por m³ es obligatoria cuando la JASS tiene medidor.',
+            'usa_poa.required' => 'Indica si la JASS usará el Plan Operativo Anual (POA) para calcular su cuota.',
         ];
     }
 }

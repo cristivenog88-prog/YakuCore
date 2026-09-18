@@ -15,6 +15,7 @@ interface SocioOpcion {
 
 interface ReunionProps {
     id: number;
+    uuid: string;
     titulo: string;
     fecha: string;
 }
@@ -30,7 +31,7 @@ export default function TomarAsistencia({ reunion, socios }: Props) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Panel', href: '/panel' },
         { title: 'Reuniones', href: '/panel/reuniones' },
-        { title: reunion.titulo, href: route('panel.reuniones.show', reunion.id) },
+        { title: reunion.titulo, href: route('panel.reuniones.show', reunion.uuid) },
         { title: 'Tomar asistencia', href: '#' },
     ];
 
@@ -45,14 +46,14 @@ export default function TomarAsistencia({ reunion, socios }: Props) {
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        if (!confirm('Al guardar, la asistencia queda bloqueada y la reunión pasa a finalizada. Se te pedirá tu contraseña. ¿Continuar?')) {
+        if (!confirm('Al guardar, la asistencia queda bloqueada y la reunión pasa a finalizada. No podrá editarse después. ¿Continuar?')) {
             return;
         }
 
         const asistencias = socios.map((socio) => ({ socio_id: socio.id, estado: estados[socio.id] }));
 
         router.post(
-            route('panel.reuniones.asistencia.store', reunion.id),
+            route('panel.reuniones.asistencia.store', reunion.uuid),
             { asistencias },
             {
                 onStart: () => setProcessing(true),

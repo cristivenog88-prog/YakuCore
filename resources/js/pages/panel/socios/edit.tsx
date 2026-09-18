@@ -6,6 +6,7 @@ import SocioForm, { type SocioFormData } from './socio-form';
 
 interface SocioProps {
     id: number;
+    uuid: string;
     nombres: string;
     apellidos: string;
     dni: string;
@@ -34,7 +35,7 @@ export default function SocioEdit({ socio }: Props) {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        put(route('panel.socios.update', socio.id));
+        put(route('panel.socios.update', socio.uuid));
     };
 
     return (

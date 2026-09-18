@@ -6,6 +6,7 @@ import { FormEventHandler } from 'react';
 
 interface JassResultado {
     id: number;
+    uuid: string;
     nombre: string;
     comunidad: string;
     distrito: string;
@@ -50,7 +51,7 @@ export default function BuscarJass({ busqueda, resultados }: Props) {
                             resultados.map((jass) => (
                                 <Link
                                     key={jass.id}
-                                    href={route('portal.jass.show', jass.id)}
+                                    href={route('portal.jass.show', jass.uuid)}
                                     className="rounded-md border p-4 transition-colors hover:bg-muted"
                                 >
                                     <p className="font-medium">{jass.nombre}</p>

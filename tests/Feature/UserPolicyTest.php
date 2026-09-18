@@ -59,13 +59,31 @@ test('solo superadmin puede asignar el rol presidente', function () {
     expect($presidente->can('asignarRol', [User::class, Rol::Presidente, $jass->id]))->toBeFalse();
 });
 
-test('presidente solo puede asignar tesorero/vocal dentro de su propia JASS', function () {
+test('presidente puede asignar tesorero/fiscal/vocal dentro de su propia JASS', function () {
     $jassA = Jass::factory()->create();
     $jassB = Jass::factory()->create();
     $presidenteA = User::factory()->presidente($jassA)->create();
 
     expect($presidenteA->can('asignarRol', [User::class, Rol::Tesorero, $jassA->id]))->toBeTrue();
+    expect($presidenteA->can('asignarRol', [User::class, Rol::Fiscal, $jassA->id]))->toBeTrue();
     expect($presidenteA->can('asignarRol', [User::class, Rol::Vocal, $jassA->id]))->toBeTrue();
     expect($presidenteA->can('asignarRol', [User::class, Rol::Tesorero, $jassB->id]))->toBeFalse();
+    expect($presidenteA->can('asignarRol', [User::class, Rol::Fiscal, $jassB->id]))->toBeFalse();
     expect($presidenteA->can('asignarRol', [User::class, Rol::Superadmin, $jassA->id]))->toBeFalse();
+});
+
+test('presidente puede ver y actualizar un fiscal de su propia JASS', function () {
+    $jass = Jass::factory()->create();
+    $presidente = User::factory()->presidente($jass)->create();
+    $fiscal = User::factory()->fiscal($jass)->create();
+
+    expect($presidente->can('view', $fiscal))->toBeTrue();
+    expect($presidente->can('update', $fiscal))->toBeTrue();
+    expect($presidente->can('delete', $fiscal))->toBeTrue();
+});
+
+test('fiscal no puede gestionar usuarios (viewAny en falso)', function () {
+    $fiscal = User::factory()->fiscal()->create();
+
+    expect($fiscal->can('viewAny', User::class))->toBeFalse();
 });

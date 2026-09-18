@@ -8,6 +8,8 @@ import { FormEventHandler } from 'react';
 
 export interface GastoFormData {
     descripcion: string;
+    proveedor: string;
+    fecha_compra: string;
     monto: string;
     tipo_comprobante: string;
     foto: File | null;
@@ -27,6 +29,7 @@ interface Props {
 const tiposComprobante = [
     { value: 'boleta', label: 'Boleta' },
     { value: 'factura', label: 'Factura' },
+    { value: 'ticket', label: 'Ticket de compra' },
     { value: 'declaracion_jurada', label: 'Declaración jurada' },
 ];
 
@@ -37,6 +40,26 @@ export default function GastoForm({ data, setData, errors, processing, onSubmit,
                 <Label htmlFor="descripcion">Descripción</Label>
                 <Input id="descripcion" value={data.descripcion} onChange={(e) => setData('descripcion', e.target.value)} required />
                 <InputError message={errors.descripcion} />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="grid gap-2">
+                    <Label htmlFor="proveedor">Proveedor</Label>
+                    <Input id="proveedor" value={data.proveedor} onChange={(e) => setData('proveedor', e.target.value)} required />
+                    <InputError message={errors.proveedor} />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="fecha_compra">Fecha de compra</Label>
+                    <Input
+                        id="fecha_compra"
+                        type="date"
+                        value={data.fecha_compra}
+                        onChange={(e) => setData('fecha_compra', e.target.value)}
+                        required
+                    />
+                    <InputError message={errors.fecha_compra} />
+                </div>
             </div>
 
             <div className="grid gap-2">

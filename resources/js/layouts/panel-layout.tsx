@@ -4,7 +4,18 @@ import { AppSidebarHeader } from '@/components/app-sidebar-header';
 import { AppSidebarBase } from '@/components/yaku/app-sidebar-base';
 import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { AlertTriangle, Building2, CalendarDays, ClipboardList, LayoutGrid, Megaphone, Receipt, UserRound, Users } from 'lucide-react';
+import {
+    AlertTriangle,
+    Building2,
+    Calculator,
+    CalendarDays,
+    ClipboardList,
+    LayoutGrid,
+    Megaphone,
+    Receipt,
+    UserRound,
+    Users,
+} from 'lucide-react';
 
 interface Props {
     children: React.ReactNode;
@@ -18,7 +29,7 @@ interface Props {
  * consciente del rol: nunca enlaza a una ruta que el usuario tiene prohibida.
  */
 export default function PanelLayout({ children, breadcrumbs = [] }: Props) {
-    const { auth } = usePage<SharedData>().props;
+    const { auth, jass } = usePage<SharedData>().props;
     const esSuperadmin = auth.user.rol === 'superadmin';
     const inicio = esSuperadmin ? '/superadmin' : '/panel';
 
@@ -27,6 +38,11 @@ export default function PanelLayout({ children, breadcrumbs = [] }: Props) {
     if (!esSuperadmin) {
         items.push({ title: 'Socios', url: '/panel/socios', icon: UserRound });
         items.push({ title: 'Morosidad', url: '/panel/morosidad', icon: AlertTriangle });
+
+        if (jass?.usa_poa) {
+            items.push({ title: 'POA', url: '/panel/poa', icon: Calculator });
+        }
+
         items.push({ title: 'Gastos', url: '/panel/gastos', icon: Receipt });
         items.push({ title: 'Reuniones', url: '/panel/reuniones', icon: CalendarDays });
         items.push({ title: 'Anuncios', url: '/panel/anuncios', icon: Megaphone });

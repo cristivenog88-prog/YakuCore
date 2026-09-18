@@ -6,12 +6,16 @@ import { Head, Link, router } from '@inertiajs/react';
 
 interface GastoFila {
     id: number;
+    uuid: string;
     descripcion: string;
+    proveedor: string | null;
+    fechaCompra: string | null;
     monto: number;
     tipoComprobante: string;
     tieneFoto: boolean;
     usuario: string;
     fecha: string;
+    puedeEditar: boolean;
 }
 
 interface Props {
@@ -30,6 +34,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const etiquetasComprobante: Record<string, string> = {
     boleta: 'Boleta',
     factura: 'Factura',
+    ticket: 'Ticket de compra',
     declaracion_jurada: 'Declaración jurada',
 };
 
@@ -38,8 +43,9 @@ function formatearMonto(monto: number): string {
 }
 
 const columnas: ColumnaTabla<GastoFila>[] = [
-    { clave: 'fecha', etiqueta: 'Fecha', render: (fila) => fila.fecha },
+    { clave: 'fechaCompra', etiqueta: 'Fecha de compra', render: (fila) => fila.fechaCompra ?? '—' },
     { clave: 'descripcion', etiqueta: 'Descripción', render: (fila) => fila.descripcion },
+    { clave: 'proveedor', etiqueta: 'Proveedor', render: (fila) => fila.proveedor ?? '—' },
     { clave: 'tipo', etiqueta: 'Comprobante', render: (fila) => etiquetasComprobante[fila.tipoComprobante] ?? fila.tipoComprobante },
     { clave: 'monto', etiqueta: 'Monto', render: (fila) => <span className="font-mono">{formatearMonto(fila.monto)}</span> },
     { clave: 'usuario', etiqueta: 'Registrado por', render: (fila) => fila.usuario },
@@ -95,15 +101,18 @@ export default function GastosIndex({ gastos, totalesPorMes, totalAnio, anio, pu
                         <>
                             {fila.tieneFoto && (
                                 <Button variant="outline" size="sm" asChild>
-                                    <a href={route('panel.gastos.comprobante', fila.id)} target="_blank" rel="noreferrer">
+                                    <a href={route('panel.gastos.comprobante', fila.uuid)} target="_blank" rel="noreferrer">
                                         Ver comprobante
                                     </a>
                                 </Button>
                             )}
-                            {puedeGestionar && (
+                            {puedeGestionar && fila.puedeEditar && (
                                 <Button variant="outline" size="sm" asChild>
-                                    <Link href={route('panel.gastos.edit', fila.id)}>Editar</Link>
+                                    <Link href={route('panel.gastos.edit', fila.uuid)}>Editar</Link>
                                 </Button>
+                            )}
+                            {puedeGestionar && !fila.puedeEditar && (
+                                <span className="text-muted-foreground text-xs">Plazo de edición vencido (24h)</span>
                             )}
                         </>
                     )}

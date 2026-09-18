@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TipoPago;
 use App\Models\Concerns\PerteneceAJass;
+use App\Models\Concerns\SeEnlazaPorUuid;
 use Database\Factories\PagoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Pago extends Model
 {
     /** @use HasFactory<PagoFactory> */
-    use HasFactory, PerteneceAJass;
+    use HasFactory, PerteneceAJass, SeEnlazaPorUuid;
 
     protected $fillable = [
         'socio_id',
@@ -44,6 +45,15 @@ class Pago extends Model
             'monto' => 'decimal:2',
             'fecha_pago' => 'date',
         ];
+    }
+
+    /**
+     * Código de recibo formal para mostrar/imprimir (nunca el id ni el uuid):
+     * prefijo único de la JASS + correlativo con padding, ej. "JASSVillaSol-000043".
+     */
+    public static function formatearCodigo(string $prefijoJass, int $numeroRecibo): string
+    {
+        return sprintf('%s-%06d', $prefijoJass, $numeroRecibo);
     }
 
     public function socio(): BelongsTo

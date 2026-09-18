@@ -7,6 +7,7 @@ import { Head, Link } from '@inertiajs/react';
 
 interface ReunionFila {
     id: number;
+    uuid: string;
     titulo: string;
     fecha: string;
     hora: string;
@@ -69,7 +70,7 @@ export default function ReunionesIndex({ reuniones, puedeGestionar }: Props) {
                     vacio="No hay reuniones registradas."
                     acciones={(fila) => (
                         <Button variant="outline" size="sm" asChild>
-                            <Link href={route('panel.reuniones.show', fila.id)}>Ver</Link>
+                            <Link href={route('panel.reuniones.show', fila.uuid)}>Ver</Link>
                         </Button>
                     )}
                 />

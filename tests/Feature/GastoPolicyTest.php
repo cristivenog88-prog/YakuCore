@@ -40,6 +40,19 @@ test('todos los roles pueden ver el listado, incluido superadmin de solo lectura
     expect($superadmin->can('view', $gasto))->toBeTrue();
 });
 
+test('pasadas 24 horas del registro, el gasto ya no se puede editar ni eliminar', function () {
+    $jass = Jass::factory()->create();
+    app(ContextoJass::class)->fijar($jass);
+    $gasto = Gasto::factory()->create();
+    $gasto->forceFill(['created_at' => now()->subDay()->subMinute()])->save();
+
+    $presidente = User::factory()->presidente($jass)->create();
+
+    expect($presidente->can('update', $gasto))->toBeFalse();
+    expect($presidente->can('delete', $gasto))->toBeFalse();
+    expect($presidente->can('view', $gasto))->toBeTrue();
+});
+
 test('presidente no puede ver ni gestionar un gasto de otra JASS', function () {
     $jassA = Jass::factory()->create();
     $jassB = Jass::factory()->create();

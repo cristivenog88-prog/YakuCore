@@ -69,6 +69,9 @@ Los de shadcn/ui tal cual (`resources/js/components/ui/`), sin modificar — her
 ### Badge de estado — `components/yaku/BadgeEstado.tsx`
 Componente nuevo para estados de negocio (reunión programada/cancelada/finalizada, anuncio visible/inactivo, asistencia presente/ausente, vivienda al día/morosa). Variantes `exito | error | advertencia | neutro`, fondo "suave" + texto del tono sólido correspondiente. Reemplaza cualquier uso de `Badge` de shadcn con colores por defecto para indicar estado de negocio.
 
+### Badge de rol — `components/yaku/BadgeRol.tsx`
+Identidad visual por rol de usuario (no confundir con `BadgeEstado`, que indica estado de un registro): presidente celeste, tesorero rojo, vocal amarillo, superadmin azul. Tokens `yaku-rol-{presidente,tesorero,vocal,superadmin}` (+ variante "suave" para el fondo), mismo patrón que los badges de estado. Se muestra en la cabecera del panel (junto a las migas de pan) y en los listados de usuarios.
+
 ### Tabla responsiva — `components/yaku/TablaResponsiva.tsx`
 Patrón obligatorio para toda tabla de datos dense (spec §7.3): **tabla real en viewport ≥ `md` (768px)**, **tarjetas apiladas en `< md`**. Encapsula el patrón una sola vez — ninguna página implementa su propia versión mobile de una tabla. API: columnas declarativas (`{ etiqueta, render(fila) }`) + `filas`; internamente renderiza `<table>` en desktop (`hidden md:table`) y una lista de tarjetas en mobile (`md:hidden`), reutilizando el mismo `render` por columna para no duplicar la lógica de presentación de cada celda.
 

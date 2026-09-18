@@ -16,6 +16,7 @@ export default function JassCreate() {
         comunidad: '',
         distrito: '',
         tiene_medidor: false,
+        usa_poa: false,
         tarifa_base_m3: '',
         periodicidad_mantenimiento: '',
         dia_vencimiento: '15',
